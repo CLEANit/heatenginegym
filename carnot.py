@@ -4,12 +4,20 @@ class Engine:
     def __init__(self, Ti=300.0, Vi=0.001, Tc=300.0, Th=500.0, dV=0.0002):
         self.N = 1.0/22.4 # 1 mole occupies 22.4 L at STP
         self.c = 5.0/3.0  # Type of gas 
-        self.R = 8.3144598/1000.0 # Units of kJ/K/mol
+        self.kB = 1.38064852e-23  #Boltzmann constant
+        self.NA = 6.0221409e+23   #Avogadro's number
+
+        self.J_to_kJ = 0.001
+
+        self.R = self.kB * self.NA * self.J_to_kJ # Units of kJ/K/mol
 
         self.Vmin = 0.0001 # m**3
         self.Vmax = 0.001 # m**3
         self.Tmin = 0.0 # K
         self.Tmax = 1000.0 # K
+
+        self.Pmin = self.N * self.Tmin * self.R / self.Vmax
+        self.Pmax = self.N * self.Tmax * self.R / self.Vmin
 
         self.Ti = Ti # Initial T
         self.Vi = Vi # Initial V
@@ -19,7 +27,11 @@ class Engine:
 
         self.T = self.Ti
         self.V = self.Vi
+        self.__update_equations_of_state()
+
+    def __update_equations_of_state(self):
         self.P = self.N * self.T * self.R / self.V
+        self.U = 3./2. * self.N * self.NA * self.kB * self.T
 
     def reset(self):
         self.T = self.Ti
@@ -38,6 +50,7 @@ class Engine:
         if self.V <= self.Vmin:
             self.V = V
         self.T = T * ((V/self.V) ** (2.0/3.0))
+        self.__update_equations_of_state()
 
         dW = -(3.0/2.0) * self.N * self.R * (self.T - T)
         dQ = 0.0
@@ -50,6 +63,7 @@ class Engine:
         if self.V > self.Vmax:
             self.V = V
         self.T = T * ((V/self.V) ** (2.0/3.0))
+        self.__update_equations_of_state()
 
         dW = -(3.0/2.0) * self.N * self.R * (self.T - T)
         dQ = 0.0
@@ -57,6 +71,7 @@ class Engine:
 
     def N_Tc(self):
         self.T = self.Tc
+        self.__update_equations_of_state()
 
         dW = 0.0
         dQ = 0.0
@@ -69,6 +84,7 @@ class Engine:
         if self.V <= self.Vmin:
             self.V = V
         self.T = self.Tc
+        self.__update_equations_of_state()
 
         dW = self.N * self.R * self.T * np.log(self.V / V)
         dQ = 0.0
@@ -82,12 +98,14 @@ class Engine:
             self.V = V
         self.T = self.Tc
 
+        self.__update_equations_of_state()
         dW = self.N * self.R * self.T * np.log(self.V / V)
         dQ = 0.0
         return self.T, self.V, dW, dQ
 
     def N_Th(self):
         self.T = self.Th
+        self.__update_equations_of_state()
 
         dW = 0.0
         dQ = 0.0
@@ -101,6 +119,7 @@ class Engine:
             self.V = V
         self.T = self.Th
 
+        self.__update_equations_of_state()
         dW = self.N * self.R * self.T * np.log(self.V / V)
         dQ = 0.0
         return self.T, self.V, dW, dQ
@@ -113,6 +132,7 @@ class Engine:
             self.V = V
         self.T = self.Th
 
+        self.__update_equations_of_state()
         dW = self.N * self.R * self.T * np.log(self.V / V)
         dQ = 0.0
         return self.T, self.V, dW, dQ
@@ -144,6 +164,19 @@ class Cycle:
                'push_Th':7,
                'pull_Th':8
              }
+
+    def get_perfect_carnot_action_set(self):
+        VA = self.engine.Vmin
+        VD = VA * (self.engine.Th / self.engine.Tc)**(3./2.)
+        VC = self.engine.Vmax
+        VB = VC * (self.engine.Tc / self.engine.Th)**(3./2.)
+
+        actions = ['push_Tc']*int( (VC-VD)/self.engine.dV) +\
+                  ['push_D']*int( (VD-VA)/self.engine.dV) +\
+                  ['pull_Th']*int( (VB-VA)/self.engine.dV) +\
+                  ['pull_D']*int( (VC-VB)/self.engine.dV)
+
+        return actions
 
     def reset(self):
         self.engine.reset()
