@@ -1,7 +1,7 @@
 import numpy as np
 
 class Engine:
-    def __init__(self, Ti = 300.0, Vi = 0.001, Tc = 300.0, Th = 500.0, dV = 0.0002):
+    def __init__(self, Ti=300.0, Vi=0.001, Tc=300.0, Th=500.0, dV=0.0002):
         self.N = 1.0/22.4 # 1 mole occupies 22.4 L at STP
         self.c = 5.0/3.0  # Type of gas 
         self.R = 8.3144598/1000.0 # Units of kJ/K/mol
@@ -118,8 +118,8 @@ class Engine:
         return self.T, self.V, dW, dQ
 
 class Cycle:
-    def __init__(self):
-        self.engine = Engine()
+    def __init__(self, *args, **kwargs):
+        self.engine = Engine(*args, **kwargs)
 
         self.done = False
 
