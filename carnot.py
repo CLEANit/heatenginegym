@@ -166,21 +166,24 @@ class CarnotEnv(gym.Env):
         self.W = []
 
 
-    def get_perfect_carnot_action_set(self):
+    def get_perfect_carnot_action_set(self, cycles=1):
         VA = self.engine.Vmin
         VD = VA * (self.engine.Th / self.engine.Tc)**(3./2.)
         VC = self.engine.Vmax
         VB = VC * (self.engine.Tc / self.engine.Th)**(3./2.)
 
         N1, N2, N3, N4 = [int( abs(VC-VD)/self.engine.dV),int( abs(VD-VA)/self.engine.dV),int( abs(VB-VA)/self.engine.dV),int( abs(VC-VB)/self.engine.dV)]
-        print N1, N2, N3, N4
-        actions = ['push_Tc']*N1 + ['push_D']*N2 + ['pull_Th']*N3 + ['pull_D']*N4 + \
-                  ['push_Tc']*N1 + ['push_D']*N2 + ['pull_Th']*N3 + ['pull_D']*N4 + \
-                  ['push_Tc']*N1 + ['push_D']*N2 + ['pull_Th']*N3 + ['pull_D']*N4 + \
-                  ['push_Tc']*N1 + ['push_D']*N2 + ['pull_Th']*N3 + ['pull_D']*N4 + \
-                  ['push_Tc']*N1 + ['push_D']*N2 + ['pull_Th']*N3 + ['pull_D']*N4 + \
-                  ['push_Tc']*N1 + ['push_D']*N2 + ['pull_Th']*N3 + ['pull_D']*N4 + \
-                  ['push_Tc']*N1 + ['push_D']*N2 + ['pull_Th']*N3 + ['pull_D']*N4
+        actions = []
+        for c in range(cycles):
+            for i in range(N1):
+                actions.append('push_Tc')
+            for i in range(N2):
+                actions.append('push_D')
+            for i in range(N3):
+                actions.append('pull_Th')
+            for i in range(N4):
+                actions.append('pull_D')
+
         self.engine.Pmax = self.engine.N * self.engine.R * self.engine.Th / VA
         self.engine.Pmin = self.engine.N * self.engine.R * self.engine.Tc / VC
 
