@@ -132,7 +132,7 @@ class Engine:
 
         self.__update_equations_of_state()
         dW = self.N * self.R * self.T * np.log(self.V / V)
-        dQ = 0.0
+        dQ = dW
         return self.T, self.V, dW, dQ
 
 class CarnotEnv(gym.Env):
@@ -162,6 +162,9 @@ class CarnotEnv(gym.Env):
                'push_Th':7,
                'pull_Th':8
              }
+        self.Q = []
+        self.W = []
+
 
     def get_perfect_carnot_action_set(self):
         VA = self.engine.Vmin
@@ -187,8 +190,12 @@ class CarnotEnv(gym.Env):
 
     def reset(self):
         self.engine.reset()
+        self.Q = []
+        self.W = []
         return np.array([self.engine.T, self.engine.V])
 
     def step(self, action):
         self.engine.T, self.engine.V, self.dW, self.dQ = self.actions[action]()
+        self.Q.append(self.dQ)
+        self.W.append(self.dW)
         return np.array([self.engine.T, self.engine.V]), self.dW, self.done, self.dQ
