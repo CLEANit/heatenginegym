@@ -1,9 +1,12 @@
 # carnot
 The carnot cycle
 
-Add:
+'Add:'
+
 import gym
+
 import cleangym
+
 env = gym.make('Carnot-v0')
 
-to file to run carnot environment
+'to file to run carnot environment'
