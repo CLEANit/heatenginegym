@@ -16,9 +16,6 @@ class Engine:
         self.Tmin = 0.0 # K
         self.Tmax = 1000.0 # K
 
-        self.Pmin = self.N * self.Tmin * self.R / self.Vmax
-        self.Pmax = self.N * self.Tmax * self.R / self.Vmin
-
         self.Ti = Ti # Initial T
         self.Vi = Vi # Initial V
         self.Tc = Tc # T of Cold Reservoir
@@ -171,10 +168,19 @@ class Cycle:
         VC = self.engine.Vmax
         VB = VC * (self.engine.Tc / self.engine.Th)**(3./2.)
 
-        actions = ['push_Tc']*int( (VC-VD)/self.engine.dV) +\
-                  ['push_D']*int( (VD-VA)/self.engine.dV) +\
-                  ['pull_Th']*int( (VB-VA)/self.engine.dV) +\
-                  ['pull_D']*int( (VC-VB)/self.engine.dV)
+        N1, N2, N3, N4 = [int( abs(VC-VD)/self.engine.dV),int( abs(VD-VA)/self.engine.dV),int( abs(VB-VA)/self.engine.dV),int( abs(VC-VB)/self.engine.dV)]
+        print N1, N2, N3, N4
+        actions = ['push_Tc']*N1 + ['push_D']*N2 + ['pull_Th']*N3 + ['pull_D']*N4 + \
+                  ['push_Tc']*N1 + ['push_D']*N2 + ['pull_Th']*N3 + ['pull_D']*N4 + \
+                  ['push_Tc']*N1 + ['push_D']*N2 + ['pull_Th']*N3 + ['pull_D']*N4 + \
+                  ['push_Tc']*N1 + ['push_D']*N2 + ['pull_Th']*N3 + ['pull_D']*N4 + \
+                  ['push_Tc']*N1 + ['push_D']*N2 + ['pull_Th']*N3 + ['pull_D']*N4 + \
+                  ['push_Tc']*N1 + ['push_D']*N2 + ['pull_Th']*N3 + ['pull_D']*N4 + \
+                  ['push_Tc']*N1 + ['push_D']*N2 + ['pull_Th']*N3 + ['pull_D']*N4
+        self.engine.Pmax = self.engine.N * self.engine.R * self.engine.Th / VA
+        self.engine.Pmin = self.engine.N * self.engine.R * self.engine.Tc / VC
+
+
 
         return actions
 
