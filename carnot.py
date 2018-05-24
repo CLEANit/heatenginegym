@@ -1,5 +1,6 @@
 import numpy as np
 import gym
+import gym.spaces
 from engine import Engine
 
 
@@ -35,7 +36,7 @@ class CarnotEnv(gym.Env):
         self.Q = []
         self.W = []
 
-
+        self.action_space = gym.spaces.Discrete(9)
 
     def reset(self):
         self.engine.reset()
