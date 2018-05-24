@@ -1,12 +1,8 @@
-# carnot
-The carnot cycle
+# Carnot world
 
-'Add:'
+## Version history:
 
-import gym
+- r0.1: working environment.
 
-import cleangym
 
-env = gym.make('Carnot-v0')
 
-'to file to run carnot environment'
