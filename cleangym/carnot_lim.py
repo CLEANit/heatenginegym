@@ -38,7 +38,11 @@ class CarnotEnv(gym.Env):
         self.engine.T, self.engine.V, self.dW, self.dQ = self.actions[action]()
         self.Q.append(self.dQ)
         self.W.append(self.dW)
-        return np.array([self.engine.T, self.engine.V]), self.dW, self.done, self.dQ
+        try:
+            r = float(np.array(self.W).sum()) / float(np.array(self.Q).sum())
+        except ZeroDivisionError:
+            r = -1.0
+        return np.array([self.engine.T, self.engine.V]), r, self.done, self.dQ
 
 
 
