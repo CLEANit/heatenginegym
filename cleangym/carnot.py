@@ -52,7 +52,7 @@ class CarnotEnv(gym.Env):
             r = float(np.array(self.W).sum() / np.array(self.Q).sum())
         except ZeroDivisionError:
             r = -1.0
-        return np.array([self.engine.T, self.engine.V]), r, self.done, self.dQ
+        return np.array([self.engine.T, self.engine.V]), r, self.done, self.engine.P
 
 
 
