@@ -6,6 +6,6 @@
 
 - r0.2: working gym environment.
 
-- r0.3: working gym environment with regular and limited action spaces.
+- r0.3: working gym environment with regular and limited action spaces. Network and grid policy based GA.
 
 
