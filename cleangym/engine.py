@@ -103,11 +103,16 @@ class Engine(object):
         return self.T, self.V, dW, dQ
 
     def N_Th(self):
+        T = self.T 
         self.T = self.Th
         self.__update_equations_of_state()
 
         dW = 0.0
-        dQ = 0.0
+        if T < self.Th:
+            dQ = (3.0/2.0) * self.N * self.R * (self.Th - T)
+        else:
+            dQ = 0.0
+        
         return self.T, self.V, dW, dQ
 
     def push_Th(self):
@@ -120,7 +125,12 @@ class Engine(object):
 
         self.__update_equations_of_state()
         dW = self.N * self.R * self.T * np.log(self.V / V)
-        dQ = 0.0
+        
+        if T < self.Th:
+            dQ = (3.0/2.0) * self.N * self.R * (self.Th - T)
+        else:
+            dQ = 0
+            
         return self.T, self.V, dW, dQ
 
     def pull_Th(self):
@@ -130,10 +140,15 @@ class Engine(object):
         if self.V > self.Vmax:
             self.V = V
         self.T = self.Th
+        
 
         self.__update_equations_of_state()
         dW = self.N * self.R * self.T * np.log(self.V / V)
-        dQ = dW
+        
+        if T < self.Th:
+            dQ = dW + (3.0/2.0) * self.N * self.R * (self.Th - T)
+        else:
+            dQ = dW
         return self.T, self.V, dW, dQ
 
 
