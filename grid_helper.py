@@ -52,8 +52,8 @@ def evaluate_policy(policy):
             a = policy.evaluate(s)
             #s, r, d, _ = env.step(a)
             s1, r, d, _ = env.step(a)
-            if not np.array_equal(s,s1):
-                count += 0.01
+            if np.array_equal(s,s1):
+                count -= 0.01
             s = s1
           
         reward += r + count
