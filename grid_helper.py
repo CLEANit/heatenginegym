@@ -8,10 +8,16 @@ def selection(population, scores):
     while i == j:
         j = np.random.choice(range(len(population)), p = p)
 
-    return population[i], population[j]
+    r = np.random.uniform()
+    if r < 0.5:
+        return population[i], population[j]
+    else:
+        return population[j], population[i]
 
-def crossover(policy1, policy2, p = 0.5):
-    new_policy = Policy(policy1.num_actions)
+def crossover(cross_pop, p = 0.5):
+    policy1 = cross_pop[0]
+    policy2 = cross_pop[1]
+    new_policy = Policy(policy1.num_actions, policy1.game)
     for i in range(int(len(policy1.policy) * p)):
         for j in range(len(policy1.policy[i])):
             new_policy.policy[i][j] = policy1.policy[i][j]
@@ -22,7 +28,8 @@ def crossover(policy1, policy2, p = 0.5):
 
     return new_policy
 
-def mutation(policy, p = 0.05):
+def mutation(mutate_pop, p = 0.10):
+    policy = mutate_pop[0]
     new_policy = Policy(policy.num_actions)
     for i in range(len(policy.policy)):
         for j in range(len(policy.policy[i])):
@@ -34,7 +41,8 @@ def mutation(policy, p = 0.05):
 
     return new_policy
 
-def evaluate_policy(policy, env):
+def evaluate_policy(policy):
+    env = policy.env
     reward = 0
     for i in range(3):
         s = env.reset()
@@ -45,10 +53,9 @@ def evaluate_policy(policy, env):
             #s, r, d, _ = env.step(a)
             s1, r, d, _ = env.step(a)
             if not np.array_equal(s,s1):
-                count +=1
+                count += 0.01
             s = s1
           
-
         reward += r + count
     reward = reward / 3.0
 
