@@ -1,7 +1,7 @@
 import numpy as np
 import gym
 import gym.spaces
-from engine import Engine
+from cleangym.engine import Engine
 
 
 
@@ -12,31 +12,21 @@ class CarnotEnv(gym.Env):
 
         self.done = False
 
-        self.actions = {0: self.engine.N_D,
-                        1: self.engine.push_D,
-                        2: self.engine.pull_D,
-                        3: self.engine.N_Tc,
-                        4: self.engine.push_Tc,
-                        5: self.engine.pull_Tc,
-                        6: self.engine.N_Th,
-                        7: self.engine.push_Th,
-                        8: self.engine.pull_Th}
+        self.actions = {0: self.engine.push_D,
+                        1: self.engine.pull_D,
+                        2: self.engine.push_Tc,
+                        3: self.engine.pull_Th}
 
         self.action_map = {
-               'N_D':0,
-               'push_D':1,
-               'pull_D':2,
-               'N_Tc':3,
-               'push_Tc':4,
-               'pull_Tc':5,
-               'N_Th':6,
-               'push_Th':7,
-               'pull_Th':8
+               'push_D':0,
+               'pull_D':1,
+               'push_Tc':2,
+               'pull_Th':3
              }
         self.Q = []
         self.W = []
 
-        self.action_space = gym.spaces.Discrete(9)
+        self.action_space = gym.spaces.Discrete(4)
 
     def reset(self):
         self.engine.reset()
@@ -49,7 +39,7 @@ class CarnotEnv(gym.Env):
         self.Q.append(self.dQ)
         self.W.append(self.dW)
         try:
-            r = float(np.array(self.W).sum() / np.array(self.Q).sum())
+            r = float(np.array(self.W).sum()) / float(np.array(self.Q).sum())
         except ZeroDivisionError:
             r = -1.0
         return np.array([self.engine.T, self.engine.V]), r, self.done, self.engine.P
