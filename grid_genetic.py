@@ -9,7 +9,7 @@ import os
 if not os.path.exists('./grid_champions'):
     os.makedirs('./grid_champions')
 
-n_gen = 10000 # Number of generations
+n_gen = 1000 # Number of generations
 n_pop = 100 # Starting population
 n_mutate = 25 # Number of mutations per generation
 n_breed = 25 # Number of crossovers per generation
@@ -54,7 +54,7 @@ for generation in range(n_gen):
     for i in range(n_pop):
         scores[i] = evaluate_policy(population[i], env)
 
-    l1, l2 = zip(*sorted(zip(scores, population)))
+    l1, l2 = zip(*sorted(zip(scores, population), key = lambda x: x[0]))
     scores = np.array(l1[n_sacrifice:])
     population = list(l2[n_sacrifice:])
     population[-1].win += 1
@@ -64,7 +64,7 @@ for generation in range(n_gen):
     if gen % 100 == 0:
         champion = population[-1]
         champion.win += 1
-        np.savez('./champions/' + game + '_' + str(gen) + '.npz', w=champion.policy)
+        np.savez('./grid_champions/' + game + '_' + str(gen) + '.npz', w=champion.policy)
         print('Champion has won ' + str(champion.win) + ' game(s)!')
 
     younglings = []
@@ -93,7 +93,7 @@ for i in range(n_pop):
 
 print('Best policy score = %0.2f.' %(np.max(scores)))
 
-l1, l2 = zip(*sorted(zip(scores, population)))
+l1, l2 = zip(*sorted(zip(scores, population), key = lambda x: x[0]))
 champion = l2[-1]
 champion.win += 1
 np.savez('./grid_champions/' + game + '_' + str(gen) + '.npz', w=champion.policy)

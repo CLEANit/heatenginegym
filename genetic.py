@@ -89,7 +89,7 @@ for i in range(n_pop):
 
 print('Best policy score = %0.2f.' %(np.max(scores)))
 
-l1, l2 = zip(*sorted(zip(scores, population)))
+l1, l2 = zip(*sorted(zip(scores, population),key=lambda x: x[0]))
 champion = l2[-1]
 champion.win += 1
 np.savez('./champions/' + game + '.npz', w=champion.W, b=champion.B)

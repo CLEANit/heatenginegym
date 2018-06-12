@@ -38,12 +38,18 @@ def evaluate_policy(policy, env):
     reward = 0
     for i in range(3):
         s = env.reset()
+        count = 0
         d = False
         while not d:
             a = policy.evaluate(s)
-            s, r, d, _ = env.step(a)
+            #s, r, d, _ = env.step(a)
+            s1, r, d, _ = env.step(a)
+            if not np.array_equal(s,s1):
+                count +=1
+            s = s1
+          
 
-        reward += r
+        reward += r + count
     reward = reward / 3.0
 
     return reward
@@ -54,4 +60,4 @@ def vis_policy(policy, env):
     while not d:
         a = policy.evaluate(s)
         s, r, d, p = env.step(a)
-        print p, s[1], r
+        print(p, s[1], r)
