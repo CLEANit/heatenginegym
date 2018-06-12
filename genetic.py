@@ -1,24 +1,26 @@
 import gym
 import gym.spaces
 import cleangym
+from cleangym.scores import Scores
 import numpy as np
 from helper import *
 from policy import Policy
+from multiprocessing import Pool
 import os
 
 if not os.path.exists('./champions'):
     os.makedirs('./champions')
 
-n_gen = 1000000 # Number of generations
+n_gen = 100 # Number of generations
 n_pop = 100 # Starting population
 n_mutate = 25 # Number of mutations per generation
 n_breed = 25 # Number of crossovers per generation
 n_sacrifice = 50 # Number of removals per generation
 hidden_units = np.array([128, 128]) # Number of kernels per layer, len(hidden_units) = number of layers
-cross_p = 0.5 # Probability of policy1 weight being used during crossover
-mut_p = 0.5 # Probability of weight mutating
-wins = 10 # Number of wins to be considered the best
-game = 'Carnot-v0' # Game to play
+game = 'CartPole-v0' # Game to play
+cpus = 4 # Number of processes to run
+pool = Pool(processes = cpus)
+min_score, max_score = Scores(game)
 
 env = gym.make(game)
 s0 = env.reset()
@@ -38,7 +40,7 @@ elif n_sacrifice >= n_pop - 1:
 
 population = []
 for i in range(n_pop):
-    policy = Policy(s0, hidden_units, num_actions)
+    policy = Policy(s0, hidden_units, num_actions, game)
     policy.gen_random()
     population.append(policy)
 
@@ -47,9 +49,7 @@ winning = False
 
 for generation in range(n_gen):
     gen += 1
-    scores = np.zeros(n_pop)
-    for i in range(n_pop):
-        scores[i] = evaluate_policy(population[i], env)
+    scores = pool.map(evaluate_policy, population)
 
     l1, l2 = zip(*sorted(zip(scores, population)))
     scores = np.array(l1[n_sacrifice:])
@@ -63,33 +63,31 @@ for generation in range(n_gen):
         np.savez('./champions/' + game + '_' + str(gen) + '.npz', w=champion.W, b=champion.B)
         print('Champion has won ' + str(champion.win + 1) + ' game(s)!')
 
-    scores += 1.1
-    younglings = []
-    mutants = []
+    scores += 0.1 - min_score
+    cross_pop = []
+    mutate_pop = []
     for i in range(n_breed):
         policy1, policy2 = selection(population, scores)
-        new_policy = crossover(policy1, policy2, cross_p)
-        younglings.append(new_policy)
-
-    n_pop += n_breed
+        cross_pop.append([policy1, policy2])
 
     for i in range(n_mutate):
         policy1, policy2 = selection(population, scores)
-        new_policy = mutation(policy1, mut_p)
-        mutants.append(new_policy)
+        mutate_pop.append([policy1])
 
+    younglings = pool.map(crossover, cross_pop)
+    mutants = pool.map(mutation, mutate_pop)
+
+    n_pop += n_breed
     n_pop += n_mutate
 
     population += younglings
     population += mutants
 
-scores = np.zeros(n_pop)
-for i in range(n_pop):
-    scores[i] = evaluate_policy(population[i], env)
+scores = pool.map(evaluate_policy, population)
 
 print('Best policy score = %0.2f.' %(np.max(scores)))
 
-l1, l2 = zip(*sorted(zip(scores, population),key=lambda x: x[0]))
+l1, l2 = zip(*sorted(zip(scores, population)))
 champion = l2[-1]
 champion.win += 1
 np.savez('./champions/' + game + '.npz', w=champion.W, b=champion.B)

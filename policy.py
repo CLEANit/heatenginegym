@@ -1,8 +1,13 @@
 import numpy as np
+import gym
+import gym.spaces
+import cleangym
 
 class Policy():
-    def __init__(self, state, hidden_units, num_actions):
+    def __init__(self, state, hidden_units, num_actions, game):
         self.state = state
+        self.game = game
+        self.env = gym.make(self.game)
         self.size_X = self.state.shape[0]
         self.size_Y = self.state.shape[1]
         self.hidden_units = hidden_units
