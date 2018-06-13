@@ -90,5 +90,5 @@ def vis_policy(policy, env):
         a = policy.evaluate(s)
         s, r, d, p = env.step(a)
         #env.render()
-        print p, s[1], r
+        print (p, s[1], r)
         s = np.reshape(s, (s.shape[0], 1))
