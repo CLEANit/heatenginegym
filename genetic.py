@@ -11,13 +11,13 @@ import os
 if not os.path.exists('./champions'):
     os.makedirs('./champions')
 
-n_gen = 100 # Number of generations
+n_gen = 300 # Number of generations
 n_pop = 100 # Starting population
 n_mutate = 25 # Number of mutations per generation
 n_breed = 25 # Number of crossovers per generation
 n_sacrifice = 50 # Number of removals per generation
 hidden_units = np.array([128, 128]) # Number of kernels per layer, len(hidden_units) = number of layers
-game = 'CartPole-v0' # Game to play
+game = 'Carnot-v0' # Game to play
 cpus = 4 # Number of processes to run
 pool = Pool(processes = cpus)
 min_score, max_score = Scores(game)
@@ -51,7 +51,7 @@ for generation in range(n_gen):
     gen += 1
     scores = pool.map(evaluate_policy, population)
 
-    l1, l2 = zip(*sorted(zip(scores, population)))
+    l1, l2 = zip(*sorted(zip(scores, population), key = lambda x: x[0]))
     scores = np.array(l1[n_sacrifice:])
     population = list(l2[n_sacrifice:])
     population[-1].win += 1
@@ -87,7 +87,7 @@ scores = pool.map(evaluate_policy, population)
 
 print('Best policy score = %0.2f.' %(np.max(scores)))
 
-l1, l2 = zip(*sorted(zip(scores, population)))
+l1, l2 = zip(*sorted(zip(scores, population), key = lambda x: x[0]))
 champion = l2[-1]
 champion.win += 1
 np.savez('./champions/' + game + '.npz', w=champion.W, b=champion.B)
