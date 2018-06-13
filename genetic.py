@@ -11,14 +11,17 @@ import os
 if not os.path.exists('./champions'):
     os.makedirs('./champions')
 
-n_gen = 300 # Number of generations
+n_gen = 100 # Number of generations
 n_pop = 100 # Starting population
 n_mutate = 25 # Number of mutations per generation
 n_breed = 25 # Number of crossovers per generation
 n_sacrifice = 50 # Number of removals per generation
 hidden_units = np.array([128, 128]) # Number of kernels per layer, len(hidden_units) = number of layers
-game = 'Carnot-v0' # Game to play
+game = 'CartPole-v0' # Game to play
 cpus = 4 # Number of processes to run
+load = False # Load previous champion
+load_gen = 100 # Generation to load
+
 pool = Pool(processes = cpus)
 min_score, max_score = Scores(game)
 
@@ -44,8 +47,14 @@ for i in range(n_pop):
     policy.gen_random()
     population.append(policy)
 
-gen = 0
-winning = False
+if load == True:
+    gen = load_gen
+    data = np.load('./champions/' + game + '_' + str(gen) + '.npz')
+    population[0].W = data['w']
+    population[0].B = data['b']
+    print ('Loading previous champion...')
+else:
+    gen = 0
 
 for generation in range(n_gen):
     gen += 1
