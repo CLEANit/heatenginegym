@@ -32,10 +32,10 @@ class Policy():
 
     def evaluate(self, state):
         X = np.reshape(state, (self.size_X, self.size_Y))
-        Y = np.matmul(X, self.W[0]) + self.B[0]
+        Y = np.tanh(np.matmul(X, self.W[0]) + self.B[0])
 
         for i in range(1, len(self.W)):
-            Y = np.matmul(Y, self.W[i]) + self.B[i]
+            Y = np.tanh(np.matmul(Y, self.W[i]) + self.B[i])
 
         Y = np.sum(Y, 0)
 
