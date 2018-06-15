@@ -1,5 +1,8 @@
 import numpy as np
 from policy import Policy
+import gym
+import gym.spaces
+import cleangym
 
 def selection(population, scores):
     p = scores / scores.sum()
@@ -65,7 +68,8 @@ def mutation(mutate_pop, p = 0.5):
     return new_policy
 
 def evaluate_policy(policy):
-    env = policy.env
+    game = policy.game
+    env = gym.make(game)
     reward = 0
     for i in range(3):
         s = env.reset()

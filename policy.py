@@ -7,7 +7,6 @@ class Policy():
     def __init__(self, shape, hidden_units, num_actions, game):
         self.shape = shape
         self.game = game
-        self.env = gym.make(self.game)
         self.size_X = self.shape[0]
         self.size_Y = self.shape[1]
         self.hidden_units = hidden_units
