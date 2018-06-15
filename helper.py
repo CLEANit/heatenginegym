@@ -17,7 +17,7 @@ def selection(population, scores):
 def crossover(cross_pop, p = 0.5):
     policy1 = cross_pop[0]
     policy2 = cross_pop[1]
-    new_policy = Policy(policy1.state, policy1.hidden_units, policy1.num_actions, policy1.game)
+    new_policy = Policy(policy1.shape, policy1.hidden_units, policy1.num_actions, policy1.game)
     for i in range(int(len(policy1.W) * p)):
         w = np.zeros((policy1.W[i].shape[0], policy1.W[i].shape[1]))
         b = np.zeros(policy1.B[i].shape[0])
@@ -48,7 +48,7 @@ def crossover(cross_pop, p = 0.5):
 
 def mutation(mutate_pop, p = 0.5):
     policy = mutate_pop[0]
-    new_policy = Policy(policy.state, policy.hidden_units, policy.num_actions, policy.game)
+    new_policy = Policy(policy.shape, policy.hidden_units, policy.num_actions, policy.game)
     for i in range(len(policy.W)):
         w = np.zeros((policy.W[i].shape[0], policy.W[i].shape[1]))
         b = np.zeros(policy.B[i].shape[0])
@@ -83,12 +83,11 @@ def evaluate_policy(policy):
 
 def vis_policy(policy, env):
     s = env.reset()
-    #env.render()
+    env.render()
     s = np.reshape(s, (s.shape[0], 1))
     d = False
     while not d:
         a = policy.evaluate(s)
         s, r, d, p = env.step(a)
-        #env.render()
-        print (p, s[1], r)
+        env.render()
         s = np.reshape(s, (s.shape[0], 1))

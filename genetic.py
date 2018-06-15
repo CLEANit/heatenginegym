@@ -28,6 +28,7 @@ min_score, max_score = Scores(game)
 env = gym.make(game)
 s0 = env.reset()
 s0 = np.reshape(s0, (s0.shape[0], 1))
+shape = s0.shape
 num_actions = int(env.action_space.n)
 
 name = 0
@@ -43,7 +44,7 @@ elif n_sacrifice >= n_pop - 1:
 
 population = []
 for i in range(n_pop):
-    policy = Policy(s0, hidden_units, num_actions, game)
+    policy = Policy(shape, hidden_units, num_actions, game)
     policy.gen_random()
     population.append(policy)
 
