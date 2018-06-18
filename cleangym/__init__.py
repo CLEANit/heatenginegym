@@ -11,3 +11,9 @@ register(
     entry_point='cleangym.carnot:CarnotEnv',
     max_episode_steps=60,
 )
+
+register(
+    id='GridWorld-v0',
+    entry_point='cleangym.gridworld:GridWorldEnv',
+    max_episode_steps = 50,
+)

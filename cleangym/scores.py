@@ -20,5 +20,8 @@ def Scores(game):
     elif game == 'Carnot-v1':
         return -1.0, 1.0
 
+    elif game == 'GridWorld-v0':
+        return 0.0, 50.0
+
     else:
         return 0.0, 0.0
