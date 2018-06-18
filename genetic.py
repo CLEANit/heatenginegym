@@ -27,7 +27,11 @@ min_score, max_score = Scores(game)
 
 env = gym.make(game)
 s0 = env.reset()
-s0 = np.reshape(s0, (s0.shape[0], 1))
+try:
+    s0 = np.reshape(s0, (s0.shape[0], 1))
+except ValueError:
+    s0 = s0
+
 shape = s0.shape
 num_actions = int(env.action_space.n)
 
