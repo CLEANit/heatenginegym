@@ -96,10 +96,17 @@ def evaluate_policy(policy):
 def vis_policy(policy, env):
     s = env.reset()
     env.render()
-    s = np.reshape(s, (s.shape[0], 1))
+    try:
+        s = np.reshape(s, (s.shape[0], 1))
+    except ValueError:
+        s = s
+
     d = False
     while not d:
         a = policy.evaluate(s)
-        s, r, d, p = env.step(a)
+        s, r, d, _ = env.step(a)
         env.render()
-        s = np.reshape(s, (s.shape[0], 1))
+        try:
+            s = np.reshape(s, (s.shape[0], 1))
+        except ValueError:
+            s = s
