@@ -93,7 +93,9 @@ def evaluate_policy(policy):
 
     return reward
 
-def vis_policy(policy, env):
+def vis_policy(policy):
+    game = policy.game
+    env = gym.make(game)
     s = env.reset()
     env.render()
     try:
