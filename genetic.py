@@ -47,16 +47,21 @@ elif n_sacrifice >= n_pop - 1:
     n_sacrifice = n_pop - 2
     print ('Sacrifice too large. n_sacrifice lowered to ' + str(n_sacrifice))
 
-population = [Policy(shape, hidden_units, num_actions, game)]
+population = []
 if load == True:
     gen = load_gen
     data = np.load('./champions/' + game + '_' + str(gen) + '.npz')
     hidden_units = data['h']
+    policy = Policy(shape, hidden_units, num_actions, game)
     population[0].W = data['w']
     population[0].B = data['b']
+    population.append(policy)
     print ('Loading previous champion...')
 else:
     gen = 0
+    policy = Policy(shape, hidden_units, num_actions, game)
+    policy.gen_random()
+    population.append(policy)
 
 for i in range(n_pop - 1):
     policy = Policy(shape, hidden_units, num_actions, game)
