@@ -53,9 +53,9 @@ if load == True:
     data = np.load('./champions/' + game + '_' + str(gen) + '.npz')
     hidden_units = data['h']
     policy = Policy(shape, hidden_units, num_actions, game)
+    population.append(policy)
     population[0].W = data['w']
     population[0].B = data['b']
-    population.append(policy)
     print ('Loading previous champion...')
 else:
     gen = 0
