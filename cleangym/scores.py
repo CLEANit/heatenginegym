@@ -1,3 +1,5 @@
+# Min and Max scores of each game used when calculating probabilites in selection process
+
 def Scores(game):
     if game == 'CartPole-v0':
         return 0.0, 200.0
@@ -22,6 +24,15 @@ def Scores(game):
 
     elif game == 'GridWorld-v0':
         return 0.0, 50.0
+
+    elif game == 'DumbLoop-v0':
+        return -200.0, 0.0
+
+    elif game == 'DumbLoop-v1':
+        return -200.0, 0.0
+
+    elif game == 'DumbLoop-v2':
+        return -200.0, 300.0
 
     else:
         return 0.0, 0.0
