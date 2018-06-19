@@ -118,4 +118,4 @@ while not winning:
     print('Champion has won ' + str(champion.win) + ' game(s)!')
 
     if champion.win > wins:
-        winning == True
+        winning = True
