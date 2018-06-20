@@ -35,3 +35,9 @@ register(
     entry_point='cleangym.loop_area:LoopEnv',
     max_episode_steps = 200,
 )
+
+register(
+    id='ChemWorld-v0',
+    entry_point='cleangym.chemworld:ChemWorldEnv',
+    max_episode_steps = 200,
+)
