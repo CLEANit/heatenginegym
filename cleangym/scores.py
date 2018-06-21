@@ -35,7 +35,7 @@ def Scores(game):
         return -200.0, 300.0
 
     elif game == 'ChemWorld-v0':
-        return -200.0, 0.0
+        return 0.0, 5.0
 
     else:
         return 0.0, 0.0

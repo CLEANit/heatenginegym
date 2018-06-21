@@ -1,7 +1,7 @@
 import numpy as np
 
 class ChemGrid(object):
-    def __init__(self, sizeX=5, sizeY=5, init_species=np.array([3, 3, 0])):
+    def __init__(self, sizeX=5, sizeY=5, init_species=np.array([6, 6, 0])):
         self.sizeX = sizeX
         self.sizeY = sizeY
         self.init_species = init_species

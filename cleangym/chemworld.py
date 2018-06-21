@@ -41,6 +41,7 @@ class ChemWorldEnv(gym.Env):
         r = product - self.product
         if action == 5:
             r -= self.ChemGrid.recipes[self.goal_reaction]
+            r = np.max([r, 0.0])
         self.product = product
         _ = self.ChemGrid.species
 
