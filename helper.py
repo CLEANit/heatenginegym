@@ -73,20 +73,10 @@ def evaluate_policy(policy):
     reward = 0
     for i in range(5):
         s = env.reset()
-        try:
-            s = np.reshape(s, (s.shape[0], 1))
-        except ValueError:
-            s = s
-
         d = False
         while not d:
             a = policy.evaluate(s)
             s, r, d, _ = env.step(a)
-            try:
-                s = np.reshape(s, (s.shape[0], 1))
-            except ValueError:
-                s = s
-
             reward += r
 
     reward = reward / 5.0
@@ -98,17 +88,8 @@ def vis_policy(policy):
     env = gym.make(game)
     s = env.reset()
     env.render()
-    try:
-        s = np.reshape(s, (s.shape[0], 1))
-    except ValueError:
-        s = s
-
     d = False
     while not d:
         a = policy.evaluate(s)
         s, r, d, _ = env.step(a)
         env.render()
-        try:
-            s = np.reshape(s, (s.shape[0], 1))
-        except ValueError:
-            s = s
