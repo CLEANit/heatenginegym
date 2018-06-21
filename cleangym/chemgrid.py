@@ -25,56 +25,70 @@ class ChemGrid(object):
 
         self.num_reactions = len(self.reactions)
 
-        self.state = np.zeros((self.sizeX, self.sizeY, self.num_species), dtype = int)
+        self.grid = np.zeros((self.sizeX, self.sizeY, self.num_species), dtype = int)
         for i in range(self.num_species):
             for j in range(self.init_species[i]):
                 placed = False
                 while not placed:
                     X_pos = np.random.randint(0, self.sizeX)
                     Y_pos = np.random.randint(0, self.sizeY)
-                    if self.state[X_pos, Y_pos].sum() == 0:
-                        self.state[X_pos, Y_pos, i] = 1
+                    if self.grid[X_pos, Y_pos].sum() == 0:
+                        self.grid[X_pos, Y_pos, i] = 1
                         placed = True
+
+        self.__update_state()
 
     def reset(self):
-        self.state = np.zeros((self.sizeX, self.sizeY, self.num_species), dtype = int)
+        self.grid = np.zeros((self.sizeX, self.sizeY, self.num_species), dtype = int)
         for i in range(self.num_species):
             for j in range(self.init_species[i]):
                 placed = False
                 while not placed:
                     X_pos = np.random.randint(0, self.sizeX)
                     Y_pos = np.random.randint(0, self.sizeY)
-                    if self.state[X_pos, Y_pos].sum() == 0:
-                        self.state[X_pos, Y_pos, i] = 1
+                    if self.grid[X_pos, Y_pos].sum() == 0:
+                        self.grid[X_pos, Y_pos, i] = 1
                         placed = True
 
+        self.__update_state()
+
+    def __update_state(self):
+        self.state = np.reshape(self.grid, (self.sizeX, self.sizeY * self.num_species))
+
     def move_N(self, X_pos, Y_pos):
-        self.state = self.state
+        self.grid = self.grid
+        self.__update_state()
 
     def move_Up(self, X_pos, Y_pos):
-        self.state[X_pos, (Y_pos + 1) % self.sizeY] += self.state[X_pos, Y_pos]
-        self.state[X_pos, Y_pos] = np.zeros(self.num_species)
+        self.grid[X_pos, (Y_pos + 1) % self.sizeY] += self.grid[X_pos, Y_pos]
+        self.grid[X_pos, Y_pos] = np.zeros(self.num_species)
+        self.__update_state()
 
     def move_Down(self, X_pos, Y_pos):
-        self.state[X_pos, (Y_pos - 1) % self.sizeY] += self.state[X_pos, Y_pos]
-        self.state[X_pos, Y_pos] = np.zeros(self.num_species)
+        self.grid[X_pos, (Y_pos - 1) % self.sizeY] += self.grid[X_pos, Y_pos]
+        self.grid[X_pos, Y_pos] = np.zeros(self.num_species)
+        self.__update_state()
 
     def move_Left(self, X_pos, Y_pos):
-        self.state[(X_pos - 1) % self.sizeX, Y_pos] += self.state[X_pos, Y_pos]
-        self.state[X_pos, Y_pos] = np.zeros(self.num_species)
+        self.grid[(X_pos - 1) % self.sizeX, Y_pos] += self.grid[X_pos, Y_pos]
+        self.grid[X_pos, Y_pos] = np.zeros(self.num_species)
+        self.__update_state()
 
     def move_Right(self, X_pos, Y_pos):
-        self.state[(X_pos + 1) % self.sizeX, Y_pos] += self.state[X_pos, Y_pos]
-        self.state[X_pos, Y_pos] = np.zeros(self.num_species)
+        self.grid[(X_pos + 1) % self.sizeX, Y_pos] += self.grid[X_pos, Y_pos]
+        self.grid[X_pos, Y_pos] = np.zeros(self.num_species)
+        self.__update_state()
 
     def get_Truth(self, X_pos, Y_pos):
         for i in range(self.num_reactions):
-            while self.state[X_pos, Y_pos, self.reactions[i][0]] >= self.recipes[i][0] and self.state[X_pos, Y_pos, self.reactions[i][1]] >= self.recipes[i][1]:
-                self.state[X_pos, Y_pos, self.reactions[i][0]] -= self.recipes[i][0]
+            while self.grid[X_pos, Y_pos, self.reactions[i][0]] >= self.recipes[i][0] and self.grid[X_pos, Y_pos, self.reactions[i][1]] >= self.recipes[i][1]:
+                self.grid[X_pos, Y_pos, self.reactions[i][0]] -= self.recipes[i][0]
                 self.species[self.reactions[i][0]] -= self.recipes[i][0]
 
-                self.state[X_pos, Y_pos, self.reactions[i][1]] -= self.recipes[i][1]
+                self.grid[X_pos, Y_pos, self.reactions[i][1]] -= self.recipes[i][1]
                 self.species[self.reactions[i][1]] -= self.recipes[i][1]
 
-                self.state[X_pos, Y_pos, self.reactions[i][2]] += self.recipes[i][2]
+                self.grid[X_pos, Y_pos, self.reactions[i][2]] += self.recipes[i][2]
                 self.species[self.reactions[i][2]] += self.recipes[i][2]
+
+        self.__update_state()
