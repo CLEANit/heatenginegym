@@ -43,7 +43,7 @@ class Policy():
         return np.argmax(Y)
 
 def layer(num_in, num_out):
-    w = np.random.normal(size = (num_in, num_out))
-    b = np.random.normal(size = num_out)
+    w = np.random.normal(size = (size_X, num_in, num_out))
+    b = np.random.normal(size = (size_X, num_out))
     return w, b
 
