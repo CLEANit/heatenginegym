@@ -61,15 +61,15 @@ for generation in range(n_gen):
         np.savez('./grid_champions/' + game + '_' + str(gen) + '.npz', w=champion.policy)
         print('Champion has won ' + str(champion.win) + ' game(s)!')
 
-    scores += 0.1 - min_score
+    choice = np.ones(len(scores))
     cross_pop = []
     mutate_pop = []
     for i in range(n_breed):
-        policy1, policy2 = selection(population, scores)
+        policy1, policy2 = selection(population, choice)
         cross_pop.append([policy1, policy2])
 
     for i in range(n_mutate):
-        policy1, policy2 = selection(population, scores)
+        policy1, policy2 = selection(population, choice)
         mutate_pop.append([policy1])
 
     younglings = pool.map(crossover, cross_pop)

@@ -16,8 +16,8 @@ n_pop = 100 # Starting population
 n_mutate = 25 # Number of mutations per generation
 n_breed = 25 # Number of crossovers per generation
 n_sacrifice = 50 # Number of removals per generation
-hidden_units = np.array([128, 128]) # Number of kernels per layer, len(hidden_units) = number of layers
-game = 'GridWorld-v0' # Game to play
+hidden_units = np.array([32, 32]) # Number of kernels per layer, len(hidden_units) = number of layers
+game = 'Carnot-v0' # Game to play
 cpus = 4 # Number of processes to run
 load = False # Load previous champion
 load_gen = 100 # Generation to load
@@ -87,15 +87,15 @@ while not winning:
             np.savez('./champions/' + game + '_' + str(gen) + '.npz', w=champion.W, b=champion.B, h=champion.hidden_units)
             print('Champion has won ' + str(champion.win + 1) + ' game(s)!')
 
-        scores += 0.1 - min_score
+        choice = np.ones(len(scores))
         cross_pop = []
         mutate_pop = []
         for i in range(n_breed):
-            policy1, policy2 = selection(population, scores)
+            policy1, policy2 = selection(population, choice)
             cross_pop.append([policy1, policy2])
 
         for i in range(n_mutate):
-            policy1, policy2 = selection(population, scores)
+            policy1, policy2 = selection(population, choice)
             mutate_pop.append([policy1])
 
         younglings = pool.map(crossover, cross_pop)
