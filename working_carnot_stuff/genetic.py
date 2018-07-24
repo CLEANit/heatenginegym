@@ -23,7 +23,7 @@ hidden_units=np.array([256])
 game = 'Carnot-v0' # Game to play
 cpus = 16 # Number of processes to run
 load = True # Load previous champion
-load_gen = 3000 # Generation to load
+load_gen = 300000 # Generation to load
 wins = 200000 # Wins required for champion to be considered winner
 thresh = 0.39 # Score to win
 
