@@ -22,14 +22,12 @@ class StirlingEnv(gym.Env):
 
         self.action_map = {
                'N_D':0,
-               'push_D':1,
-               'pull_D':2,
-               'N_Tc':3,
-               'push_Tc':4,
-               'pull_Tc':5,
-               'N_Th':6,
-               'push_Th':7,
-               'pull_Th':8
+               'N_Tc':1,
+               'push_Tc':2,
+               'pull_Tc':3,
+               'N_Th':4,
+               'push_Th':5,
+               'pull_Th':6
              }
         self.Q = []
         self.W = []
