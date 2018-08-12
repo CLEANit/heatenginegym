@@ -1,9 +1,8 @@
 import gym
 import gym.spaces
 import cleangym
-from cleangym.scores import Scores
 import numpy as np
-from grid_helper import *
+import grid_helper
 from grid_policy import Policy
 from multiprocessing import Pool
 import os
@@ -19,7 +18,6 @@ n_sacrifice = 50 # Number of removals per generation
 game = 'Carnot-v0' # Game to play
 cpus = 4 # Number of processes to run
 pool = Pool(processes = cpus)
-min_score, max_score = Scores(game)
 
 env = gym.make(game)
 num_actions = int(env.action_space.n)
@@ -47,7 +45,7 @@ winning = False
 
 for generation in range(n_gen):
     gen += 1
-    scores = pool.map(evaluate_policy, population)
+    scores = pool.map(grid_helper.evaluate_policy, population)
 
     l1, l2 = zip(*sorted(zip(scores, population), key = lambda x: x[0]))
     scores = np.array(l1[n_sacrifice:])
@@ -72,8 +70,8 @@ for generation in range(n_gen):
         policy1, policy2 = selection(population, choice)
         mutate_pop.append([policy1])
 
-    younglings = pool.map(crossover, cross_pop)
-    mutants = pool.map(mutation, mutate_pop)
+    younglings = pool.map(grid_helper.crossover, cross_pop)
+    mutants = pool.map(grid_helper.mutation, mutate_pop)
 
     n_pop += n_breed
     n_pop += n_mutate
@@ -81,7 +79,7 @@ for generation in range(n_gen):
     population += younglings
     population += mutants
 
-scores = pool.map(evaluate_policy, population)
+scores = pool.map(grid_helper.evaluate_policy, population)
 
 print('Best policy score = %0.2f.' %(np.max(scores)))
 

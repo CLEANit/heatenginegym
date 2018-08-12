@@ -1,9 +1,8 @@
 import gym
 import gym.spaces
 import cleangym
-from cleangym.scores import Scores
 import numpy as np
-from helper import *
+import helper
 from policy import Policy
 from multiprocessing import Pool
 import os
@@ -24,7 +23,6 @@ load_gen = 100 # Generation to load
 wins = 10 # Wins required for champion to be considered winner
 
 pool = Pool(processes = cpus)
-min_score, max_score = Scores(game)
 
 env = gym.make(game)
 s0 = env.reset()
@@ -73,7 +71,7 @@ winning = False
 while not winning:
     for generation in range(n_gen):
         gen += 1
-        scores = pool.map(evaluate_policy, population)
+        scores = pool.map(helper.evaluate_policy, population)
 
         l1, l2 = zip(*sorted(zip(scores, population), key = lambda x: x[0]))
         scores = np.array(l1[n_sacrifice:])
@@ -91,15 +89,15 @@ while not winning:
         cross_pop = []
         mutate_pop = []
         for i in range(n_breed):
-            policy1, policy2 = selection(population, choice)
+            policy1, policy2 = helper.selection(population, choice)
             cross_pop.append([policy1, policy2])
 
         for i in range(n_mutate):
-            policy1, policy2 = selection(population, choice)
+            policy1, policy2 = helper.selection(population, choice)
             mutate_pop.append([policy1])
 
-        younglings = pool.map(crossover, cross_pop)
-        mutants = pool.map(mutation, mutate_pop)
+        younglings = pool.map(helper.crossover, cross_pop)
+        mutants = pool.map(helper.mutation, mutate_pop)
 
         n_pop += n_breed
         n_pop += n_mutate
@@ -107,7 +105,7 @@ while not winning:
         population += younglings
         population += mutants
 
-    scores = pool.map(evaluate_policy, population)
+    scores = pool.map(helper.evaluate_policy, population)
 
     print('Best policy score = %0.2f.' %(np.max(scores)))
 
