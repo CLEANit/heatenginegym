@@ -13,6 +13,12 @@ register(
 )
 
 register(
+    id='Stirling-v0',
+    entry_point='cleangym.stirling:StirlingEnv',
+    max_episode_steps=20,
+)
+
+register(
     id='GridWorld-v0',
     entry_point='cleangym.gridworld:GridWorldEnv',
     max_episode_steps = 50,
