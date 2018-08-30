@@ -12,6 +12,8 @@ class StirlingEnv(gym.Env):
 
         self.done = False
 
+        self.efficiency = (self.engine.Th - self.engine.Tc) / (self.engine.Th + (self.engine.Cv * (self.engine.Th - self.engine.Tc)) / (self.engine.N * self.engine.R * np.log(self.engine.Vmax / self.engine.Vmin)))
+
         self.actions = {0: self.engine.N_D,
                         1: self.engine.N_Tc,
                         2: self.engine.push_Tc,
@@ -41,7 +43,6 @@ class StirlingEnv(gym.Env):
         T = (self.engine.T - self.engine.Tmin) / (self.engine.Tmax - self.engine.Tmin)
         V = (self.engine.V - self.engine.Vmin) / (self.engine.Vmax - self.engine.Vmin)
         return np.array([T, V])
-        #return np.array([self.engine.T, self.engine.V])
 
     def step(self, action):
         self.engine.T, self.engine.V, self.dW, self.dQ = self.actions[action]()
@@ -54,5 +55,23 @@ class StirlingEnv(gym.Env):
         T = (self.engine.T - self.engine.Tmin) / (self.engine.Tmax - self.engine.Tmin)
         V = (self.engine.V - self.engine.Vmin) / (self.engine.Vmax - self.engine.Vmin)
         return np.array([T, V]), r, self.done, np.array([self.engine.T, self.engine.V, self.engine.P])
-        #return np.array([self.engine.T, self.engine.V]), r, self.done, self.engine.P
 
+    def get_perfect_stirling_action_set(self, cycles=1):
+        VA = self.engine.Vmin
+        VB = self.engine.Vmax
+        N1 = int(abs(VB - VA)/self.engine.dV)
+        N2 = 1
+        N3 = int(abs(VA - VB)/self.engine.dV)
+        N4 = 1
+        actions = []
+        for c in range(cycles):
+            for i in range(N1):
+                actions.append('push_Tc')
+            for i in range(N2):
+                actions.append('N_Th')
+            for i in range(N3):
+                actions.append('pull_Th')
+            for i in range(N4):
+                actions.append('N_Tc')
+
+        return actions

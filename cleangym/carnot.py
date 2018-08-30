@@ -45,7 +45,6 @@ class CarnotEnv(gym.Env):
         T = (self.engine.T - self.engine.Tmin) / (self.engine.Tmax - self.engine.Tmin)
         V = (self.engine.V - self.engine.Vmin) / (self.engine.Vmax - self.engine.Vmin)
         return np.array([T, V])
-        #return np.array([self.engine.T, self.engine.V])
 
     def step(self, action):
         self.engine.T, self.engine.V, self.dW, self.dQ = self.actions[action]()
@@ -58,7 +57,6 @@ class CarnotEnv(gym.Env):
         T = (self.engine.T - self.engine.Tmin) / (self.engine.Tmax - self.engine.Tmin)
         V = (self.engine.V - self.engine.Vmin) / (self.engine.Vmax - self.engine.Vmin)
         return np.array([T, V]), r, self.done, np.array([self.engine.T, self.engine.V, self.engine.P])
-        #return np.array([self.engine.T, self.engine.V]), r, self.done, self.engine.P
 
 
 
