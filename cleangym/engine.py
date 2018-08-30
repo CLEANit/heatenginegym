@@ -2,8 +2,9 @@ import numpy as np
 import gym
 
 class Engine(object):
-    def __init__(self, Ti=300.0, Vi=0.001, Tc=300.0, Th=500.0, dV=0.0002):
+    def __init__(self, Ti=300.0, Vi=0.001, Tc=300.0, Th=600.0, dV=0.0002):
         self.N = 1.0/22.4 # 1 mole occupies 22.4 L at STP
+        self.c = 5.0/3.0  # Type of gas 
         self.kB = 1.38064852e-23  #Boltzmann constant
         self.NA = 6.0221409e+23   #Avogadro's number
 
@@ -16,8 +17,8 @@ class Engine(object):
         self.Vmin = 0.0001 # m**3
         self.Vmax = 0.001
         #self.Vmax = 0.001 # m**3
-        self.Tmin = 0.0 # K
-        self.Tmax = 1000.0 # K
+        self.Tmin = Tc # K
+        self.Tmax = Th # K
 
         self.Ti = Ti # Initial T
         self.Vi = Vi # Initial V
@@ -31,7 +32,7 @@ class Engine(object):
 
     def __update_equations_of_state(self):
         self.P = self.N * self.T * self.R / self.V
-        self.U = self.Cv * self.T
+        self.U = 3./2. * self.N * self.NA * self.kB * self.T
 
     def reset(self):
         self.T = self.Ti
@@ -41,7 +42,7 @@ class Engine(object):
     def N_D(self):
         dW = 0.0
         dQ = 0.0
-
+        
         return self.T, self.V, dW, dQ
 
     def push_D(self):
@@ -51,11 +52,14 @@ class Engine(object):
         if self.V - self.Vmin < -1e-9:
             self.V = V
         self.T = T * ((V/self.V) ** (2.0/3.0))
+        if self.T - self.Tmax > 1e-9:
+            self.T = T
+            self.V = V
         self.__update_equations_of_state()
 
-        dW = -self.Cv * (self.T - T)
+        dW = -(3.0/2.0) * self.N * self.R * (self.T - T)
         dQ = 0.0
-
+        
         return self.T, self.V, dW, dQ
 
     def pull_D(self):
@@ -65,11 +69,14 @@ class Engine(object):
         if self.V - self.Vmax > 1e-9:
             self.V = V
         self.T = T * ((V/self.V) ** (2.0/3.0))
+        if self.T - self.Tmin < -1e-9:
+            self.T = T
+            self.V = V
         self.__update_equations_of_state()
 
-        dW = -self.Cv * (self.T - T)
+        dW = -(3.0/2.0) * self.N * self.R * (self.T - T)
         dQ = 0.0
-
+        
         return self.T, self.V, dW, dQ
 
     def N_Tc(self):
@@ -78,7 +85,7 @@ class Engine(object):
 
         dW = 0.0
         dQ = 0.0
-
+        
         return self.T, self.V, dW, dQ
 
     def push_Tc(self):
@@ -106,7 +113,6 @@ class Engine(object):
         self.__update_equations_of_state()
         dW = self.N * self.R * self.T * np.log(self.V / V)
         dQ = 0.0
-
         return self.T, self.V, dW, dQ
 
     def N_Th(self):
@@ -115,8 +121,8 @@ class Engine(object):
         self.__update_equations_of_state()
 
         dW = 0.0
-        if T < self.Th:
-            dQ = self.Cv * (self.Th - T)
+        if T - self.Th < -1e-9:
+            dQ = (3.0/2.0) * self.N * self.R * (self.Th - T)
         else:
             dQ = 0.0
         
@@ -133,10 +139,10 @@ class Engine(object):
         self.__update_equations_of_state()
         dW = self.N * self.R * self.T * np.log(self.V / V)
         
-        if T < self.Th:
-            dQ = self.Cv * (self.Th - T)
+        if T - self.Th < -1e-9:
+            dQ = (3.0/2.0) * self.N * self.R * (self.Th - T)
         else:
-            dQ = 0.0
+            dQ = 0
             
         return self.T, self.V, dW, dQ
 
@@ -151,42 +157,11 @@ class Engine(object):
         self.__update_equations_of_state()
         dW = self.N * self.R * self.T * np.log(self.V / V)
         
-        if T < self.Th:
-            dQ = dW + self.Cv * (self.Th - T)
+        if T - self.Th < -1e-9:
+            dQ = dW + (3.0/2.0) * self.N * self.R * (self.Th - T)
         else:
             dQ = dW
 
         return self.T, self.V, dW, dQ
-
-    def push_P(self):
-        V = self.V
-        T = self.T
-        self.V -= self.dV
-        if self.V - self.Vmin < -1e-9:
-            self.V = V
-        self.T = self.V * T / V
-
-        self.__update_equations_of_state()
-        dW = self.P * (self.V - V)
-
-        dQ = 0.0
-
-        return self.T, self.V, dW, dQ
-
-    def pull_P(self):
-        V = self.V
-        T = self.T
-        self.V += self.dV
-        if self.V - self.Vmax > 1e-9:
-            self.V = V
-        self.T = self.V * T / V
-
-        self.__update_equations_of_state()
-        dW = self.P * (self.V - V)
-
-        dQ = self.Cv * self.T + dW
-
-        return self.T, self.V, dW, dQ
-
 
 
