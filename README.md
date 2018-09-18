@@ -10,3 +10,12 @@
 
 - r0.4: working gym environment with regular and limited action spaces. Network and grid policy based GA with multiprocessing.
 
+
+
+
+## To install:
+```bash
+pip install -e ./
+```
+
+
