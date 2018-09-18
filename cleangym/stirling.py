@@ -1,7 +1,7 @@
 import numpy as np
 import gym
 import gym.spaces
-from engine import Engine
+from cleangym.engine import Engine
 
 
 
