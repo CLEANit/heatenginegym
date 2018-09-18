@@ -14,4 +14,4 @@ setup(name='carnotgym',
       description='CLEAN implementation of Carnot (and various other thermodynamic engine) gym environments.',
       author='CLEAN',
       url='https://github.com/CLEANit/carnot',
-      version='0.5')
+      version='0.4')
