@@ -6,7 +6,7 @@ from cleangym.heat_engine import HeatEngineEnv
 
 class CarnotEnv(HeatEngineEnv):
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super(CarnotEnv, self).__init__(*args, **kwargs)
         self.actions = {0: self.engine.N_D,
                         1: self.engine.push_D,
                         2: self.engine.pull_D,

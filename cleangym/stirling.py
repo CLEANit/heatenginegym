@@ -7,7 +7,7 @@ from cleangym.heat_engine import HeatEngineEnv
 
 class StirlingEnv(HeatEngineEnv):
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super(StirlingEnv, self).__init__(*args, **kwargs)
 
         self.efficiency = (self.engine.Th - self.engine.Tc) / (self.engine.Th + (self.engine.Cv * (self.engine.Th - self.engine.Tc)) / (self.engine.N * self.engine.R * np.log(self.engine.Vmax / self.engine.Vmin)))
 
