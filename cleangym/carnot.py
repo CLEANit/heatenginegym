@@ -2,16 +2,11 @@ import numpy as np
 import gym
 import gym.spaces
 from cleangym.engine import Engine
+from cleangym.heat_engine import HeatEngineEnv
 
-
-
-
-class CarnotEnv(gym.Env):
+class CarnotEnv(HeatEngineEnv):
     def __init__(self, *args, **kwargs):
-        self.engine = Engine(*args, **kwargs)
-
-        self.done = False
-
+        super().__init__(*args, **kwargs)
         self.actions = {0: self.engine.N_D,
                         1: self.engine.push_D,
                         2: self.engine.pull_D,
@@ -33,32 +28,9 @@ class CarnotEnv(gym.Env):
                'push_Th':7,
                'pull_Th':8
              }
-        self.Q = []
-        self.W = []
 
-        self.action_space = gym.spaces.Discrete(9)
-
-    def reset(self):
-        self.engine.reset()
-        self.Q = []
-        self.W = []
-        T = (self.engine.T - self.engine.Tmin) / (self.engine.Tmax - self.engine.Tmin)
-        V = (self.engine.V - self.engine.Vmin) / (self.engine.Vmax - self.engine.Vmin)
-        return np.array([T, V])
-
-    def step(self, action):
-        self.engine.T, self.engine.V, self.dW, self.dQ = self.actions[action]()
-        self.Q.append(self.dQ)
-        self.W.append(self.dW)
-        try:
-            r = float(np.array(self.W).sum()) / float(np.array(self.Q).sum())
-        except ZeroDivisionError:
-            r = -1.1
-        T = (self.engine.T - self.engine.Tmin) / (self.engine.Tmax - self.engine.Tmin)
-        V = (self.engine.V - self.engine.Vmin) / (self.engine.Vmax - self.engine.Vmin)
-        return np.array([T, V]), r, self.done, np.array([self.engine.T, self.engine.V, self.engine.P])
-
-
+        self.action_space = gym.spaces.Discrete(len(self.action_map))
+        self.observation_space = gym.spaces.Box(low=np.array([0,0]), high=np.array([1000.,1000.]),dtype=np.float32)
 
     def get_perfect_carnot_action_set(self, cycles=1):
         VA = self.engine.Vmin
@@ -80,8 +52,6 @@ class CarnotEnv(gym.Env):
 
         self.engine.Pmax = self.engine.N * self.engine.R * self.engine.Th / VA
         self.engine.Pmin = self.engine.N * self.engine.R * self.engine.Tc / VC
-
-
 
         return actions
 
