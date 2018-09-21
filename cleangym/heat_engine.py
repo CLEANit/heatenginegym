@@ -4,6 +4,7 @@ import gym.spaces
 from cleangym.engine import Engine
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
+from pylab import cm
 class HeatEngineEnv(gym.Env):
     def __init__(self, *args, **kwargs):
         self.engine = Engine(*args, **kwargs)
@@ -35,12 +36,13 @@ class HeatEngineEnv(gym.Env):
             plt.ion()
             self._plot_fig, self._plot_axs = plt.subplots(1,2,figsize=(12,6))
             self._plot_li0_masks = []
-            self._plot_li0, = self._plot_axs[0].plot(self._plot_data['V'][-6:], self._plot_data['P'][-6:])
-            for i in range(pv_points_to_plot):
+            self._plot_li0, = self._plot_axs[0].plot(self._plot_data['V'][:], self._plot_data['P'][:], 'o-', color='white')
+            cs = cm.get_cmap('Blues',11)
+            for i in reversed(range(1,pv_points_to_plot)):
                 self._plot_li0_masks.append(
-                            self._plot_axs[0].plot(self._plot_data['V'][-pv_points_to_plot:-pv_points_to_plot+i], self._plot_data['P'][-pv_points_to_plot:-pv_points_to_plot+i],
-                            alpha=1.,#/pv_points_to_plot,
-                            color='blue', linewidth=3)[0]
+                            #self._plot_axs[0].plot(self._plot_data['V'][-pv_points_to_plot:-pv_points_to_plot+i], self._plot_data['P'][-pv_points_to_plot:-pv_points_to_plot+i], 'o-',
+                            self._plot_axs[0].plot(self._plot_data['V'][-i:-i+2], self._plot_data['P'][-i:-i+2], 'o-',
+                            color=cs(i/12.), linewidth=3,zorder=i*100)[0]
                      )
 
             self._plot_li1, = self._plot_axs[1].plot(np.arange(len(self._plot_data["r"])), self._plot_data["r"], 'g-')
@@ -60,13 +62,13 @@ class HeatEngineEnv(gym.Env):
             self._first_render = False
 
         else:
-            self._plot_li0.set_xdata(self._plot_data['V'][-6:])
-            self._plot_li0.set_ydata(self._plot_data['P'][-6:])
+            self._plot_li0.set_xdata(self._plot_data['V'][:])
+            self._plot_li0.set_ydata(self._plot_data['P'][:])
             self._plot_li1.set_xdata(np.arange(len(self._plot_data["r"])))
             self._plot_li1.set_ydata(self._plot_data["r"])
-            for  i in range(len(self._plot_li0_masks)):
-                self._plot_li0_masks[i].set_xdata(self._plot_data['V'][-pv_points_to_plot:-pv_points_to_plot+i])
-                self._plot_li0_masks[i].set_ydata(self._plot_data['P'][-pv_points_to_plot:-pv_points_to_plot+i])
+            for  i in reversed(range(1,len(self._plot_li0_masks))):
+                self._plot_li0_masks[i].set_xdata(self._plot_data['V'][-i:])
+                self._plot_li0_masks[i].set_ydata(self._plot_data['P'][-i:])
 
 
             for ax in [self._plot_axs[1]]:
@@ -82,7 +84,7 @@ class HeatEngineEnv(gym.Env):
         try:
             r = float(np.array(self.W).sum()) / float(np.array(self.Q).sum())
         except ZeroDivisionError:
-            r = -1.0
+            r = 0.0
         T = (self.engine.T - self.engine.Tmin) / (self.engine.Tmax - self.engine.Tmin)
         V = (self.engine.V - self.engine.Vmin) / (self.engine.Vmax - self.engine.Vmin)
         self._plot_data['P'].append(self.engine.P)
