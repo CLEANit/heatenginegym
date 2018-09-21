@@ -7,6 +7,7 @@ from cleangym.heat_engine import HeatEngineEnv
 class CarnotEnv(HeatEngineEnv):
     def __init__(self, *args, **kwargs):
         super(CarnotEnv, self).__init__(*args, **kwargs)
+        self.efficiency = (self.engine.Th - self.engine.Tc) / self.engine.Th
         self.actions = {0: self.engine.N_D,
                         1: self.engine.push_D,
                         2: self.engine.pull_D,
