@@ -9,7 +9,7 @@ register(
 register(
     id='Carnot-v1',
     entry_point='cleangym.carnot:CarnotEnv',
-    max_episode_steps=60,
+    max_episode_steps=500,
 )
 
 register(
