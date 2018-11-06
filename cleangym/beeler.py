@@ -18,6 +18,8 @@ class BeelerEnv(HeatEngineEnv):
                         7: self.engine.push_Th,
                         8: self.engine.pull_Th}
 
+        self.dV_actions = {0: self.engine.dVi}
+
         self.action_map = {
                'N_D':0,
                'push_L':1,

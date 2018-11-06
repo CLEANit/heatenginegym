@@ -20,6 +20,8 @@ class StirlingEnv(HeatEngineEnv):
                         5: self.engine.push_Th,
                         6: self.engine.pull_Th}
 
+        self.dV_actions = {0: self.engine.dVi}
+
         self.action_map = {
                'N_D':0,
                'N_Tc':1,
