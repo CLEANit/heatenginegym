@@ -8,7 +8,7 @@
 
 - r0.3: working gym environment with regular and limited action spaces. Network and grid policy based GA.
 
-- r0.4: working gym environment with regular and limited action spaces. Network and grid policy based GA with multiprocessing.
+- r0.4: working gym environment with regular and limited action spaces and variable dV. Network and grid policy based GA with multiprocessing. Carnot, Stirling, Otto, and Beeler cycle environments available.
 
 
 
