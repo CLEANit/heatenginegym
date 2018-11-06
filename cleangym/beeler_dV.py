@@ -4,9 +4,9 @@ import gym.spaces
 from cleangym.engine import Engine
 from cleangym.heat_engine import HeatEngineEnv
 
-class CarnotEnv(HeatEngineEnv):
+class BeelerEnv(HeatEngineEnv):
     def __init__(self, *args, **kwargs):
-        super(CarnotEnv, self).__init__(*args, **kwargs)
+        super(BeelerEnv, self).__init__(*args, **kwargs)
         self.efficiency = (self.engine.Th - self.engine.Tc) / self.engine.Th
         self.actions = {0: self.engine.N_D,
                         1: self.engine.push_L,
@@ -36,7 +36,7 @@ class CarnotEnv(HeatEngineEnv):
                'pull_Th':8
              }
 
-        self.action_space = gym.spaces.Discrete(len(self.action_map) * len(dV_actions))
+        self.action_space = gym.spaces.Discrete(len(self.action_map) * len(self.dV_actions))
         self.observation_space = gym.spaces.Box(low=np.array([0,0]), high=np.array([1000.,1000.]),dtype=np.float32)
 
     def get_perfect_action_set(self, cycles=1):

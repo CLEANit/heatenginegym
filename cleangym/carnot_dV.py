@@ -38,7 +38,7 @@ class CarnotEnv(HeatEngineEnv):
                'pull_Th':8
              }
 
-        self.action_space = gym.spaces.Discrete(len(self.action_map) * len(dV_actions))
+        self.action_space = gym.spaces.Discrete(len(self.action_map) * len(self.dV_actions))
         self.observation_space = gym.spaces.Box(low=np.array([0,0]), high=np.array([1000.,1000.]),dtype=np.float32)
 
     def get_perfect_action_set(self, cycles=1):

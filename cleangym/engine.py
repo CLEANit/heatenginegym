@@ -36,13 +36,14 @@ class Engine(object):
         self.__update_equations_of_state()
         self.P0 = self.P
         self.V0 = self.V
+        self.T0 = self.T
 
     def __update_equations_of_state(self):
         self.P = self.N * self.T * self.R / self.V
         self.U = 3./2. * self.N * self.NA * self.kB * self.T
 
     def _P_L(self, V):
-        return self.P0 * (self.V0 ** (5.0/3.0)) * ((1.0 - self.k) ** (abs(V - self.V0) / self.x)) / (V ** (5.0 / 3.0))
+        return self.P0 * (self.V0 ** (5.0/3.0)) * ((1.0 - self.k) ** (abs(V - self.V0) / (self.Vmax - self.Vmin))) / (V ** (5.0 / 3.0))
 
     def reset(self):
         self.T = self.Ti
@@ -68,7 +69,7 @@ class Engine(object):
             self.V = self.V0
         self.__update_equations_of_state()
 
-        dW = -(3.0/2.0) * self.N * self.R * (self.T - T)
+        dW = -(3.0/2.0) * self.N * self.R * (self.T - self.T0)
         dQ = 0.0
         
         return self.T, self.V, dW, dQ
@@ -85,7 +86,7 @@ class Engine(object):
             self.V = self.V0
         self.__update_equations_of_state()
 
-        dW = -(3.0/2.0) * self.N * self.R * (self.T - T)
+        dW = -(3.0/2.0) * self.N * self.R * (self.T - self.T0)
         dQ = 0.0
         
         return self.T, self.V, dW, dQ
@@ -145,7 +146,7 @@ class Engine(object):
         self.T = self.Tc
         self.__update_equations_of_state()
 
-        dW = self.N * self.R * self.T * np.log(self.V / V)
+        dW = self.N * self.R * self.T * np.log(self.V / self.V0)
         dQ = 0.0
 
         return self.T, self.V, dW, dQ
@@ -158,17 +159,18 @@ class Engine(object):
         self.T = self.Tc
 
         self.__update_equations_of_state()
-        dW = self.N * self.R * self.T * np.log(self.V / V)
+        dW = self.N * self.R * self.T * np.log(self.V / self.V0)
         dQ = 0.0
         return self.T, self.V, dW, dQ
 
     def N_Th(self):
+        self.T0 = self.T
         self.T = self.Th
         self.__update_equations_of_state()
 
         dW = 0.0
-        if T - self.Th < -1e-9:
-            dQ = (3.0/2.0) * self.N * self.R * (self.Th - T)
+        if self.T0 - self.Th < -1e-9:
+            dQ = (3.0/2.0) * self.N * self.R * (self.Th - self.T0)
         else:
             dQ = 0.0
         
@@ -183,7 +185,7 @@ class Engine(object):
         self.T = self.Th
 
         self.__update_equations_of_state()
-        dW = self.N * self.R * self.T * np.log(self.V / V)
+        dW = self.N * self.R * self.T * np.log(self.V / self.V0)
         
         if self.T0 - self.Th < -1e-9:
             dQ = (3.0/2.0) * self.N * self.R * (self.Th - self.T0)
@@ -201,7 +203,7 @@ class Engine(object):
         self.T = self.Th
         
         self.__update_equations_of_state()
-        dW = self.N * self.R * self.T * np.log(self.V / V)
+        dW = self.N * self.R * self.T * np.log(self.V / self.V0)
         
         if self.T0 - self.Th < -1e-9:
             dQ = dW + (3.0/2.0) * self.N * self.R * (self.Th - self.T0)
