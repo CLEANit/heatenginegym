@@ -20,6 +20,9 @@ class Engine(object):
         self.Tmin = Tc # K
         self.Tmax = Th # K
 
+        self.Pmin = self.N*self.R*self.Tmin / self.Vmax
+        self.Pmax = self.N*self.R*self.Tmax / self.Vmin
+
         self.Ti = Ti # Initial T
         self.Vi = Vi # Initial V
         self.Tc = Tc # T of Cold Reservoir
