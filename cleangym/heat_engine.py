@@ -90,7 +90,10 @@ class HeatEngineEnv(gym.Env):
             plt.pause(0.000001)
 
     def step(self, action):
-        self.engine.T, self.engine.V, self.dW, self.dQ = self.actions[action]()
+        action1 = action % len(self.action_map)
+        action2 = int(action / len(self.action_map))
+        self.engine.dV = self.dV_actions[action2]
+        self.engine.T, self.engine.V, self.dW, self.dQ = self.actions[action1]()
         self.Q.append(self.dQ)
         self.W.append(self.dW)
         try:
