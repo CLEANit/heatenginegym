@@ -14,6 +14,8 @@ class OttoEnv(HeatEngineEnv):
                         3: self.engine.N_Tc,
                         4: self.engine.N_Th}
 
+        self.dV_actions = {0: self.engine.dVi}
+
         self.action_map = {
                'N_D':0,
                'push_D':1,
@@ -30,8 +32,10 @@ class OttoEnv(HeatEngineEnv):
     def get_perfect_action_set(self, cycles=1):
         VA = self.engine.Vmin
         VB = self.engine.Vmax
-
-        N1, N2, N3, N4 = [int( abs(VB-VA)/self.engine.dV),int(1),int( abs(VA-VB)/self.engine.dV),int(1)]
+        N1 = int(abs(VB - VA)/self.engine.dV)
+        N2 = 1
+        N3 = int(abs(VA - VB)/self.engine.dV)
+        N4 = 1
         actions = []
         for c in range(cycles):
             for i in range(N1):
@@ -42,8 +46,5 @@ class OttoEnv(HeatEngineEnv):
                 actions.append('pull_D')
             for i in range(N4):
                 actions.append('N_Tc')
-
-        self.engine.Pmax = self.engine.N * self.engine.R * self.engine.Th / VA
-        self.engine.Pmin = self.engine.N * self.engine.R * self.engine.Tc / VC
 
         return actions
