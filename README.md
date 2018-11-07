@@ -41,17 +41,9 @@ pip install -e ./
 - Beeler-v1: Heat engine environment with adiabatic actions replaced with irreversible actions and variable dV actions.
 
 
+## To  run
 
-
-## To run:
-
-- Set GA and network hyper-parameters in lines 13-18 of genetic.py
-
-- Set game in line 19 of genetic.py to one listed in Environments.
-
-```bash
-python genetic.py
-```
+See demo.py for an example.
 
 
 
