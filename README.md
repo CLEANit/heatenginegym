@@ -45,9 +45,9 @@ pip install -e ./
 
 ## To run:
 
-- Set GA and network hyper-parameters in lines 13-18 genetic.py
+- Set GA and network hyper-parameters in lines 13-18 of genetic.py
 
-- Set game in line 19 to one listed in Environments.
+- Set game in line 19 of genetic.py to one listed in Environments.
 
 ```bash
 python genetic.py
