@@ -9,13 +9,10 @@ bibtex
 ```
 
 
-
 ## To install:
 ```bash
-pip install -e ./
+pip install ./
 ```
-
-
 
 ## Environments
 
