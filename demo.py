@@ -1,5 +1,5 @@
 import gym
-import cleangym
+import heatenginegym
 import time
 import matplotlib.pyplot as plt
 
