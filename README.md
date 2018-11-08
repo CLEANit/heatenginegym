@@ -21,15 +21,15 @@ pip install -e ./
 
 
 
-|Carnot-v0|Heat engine environment with action space restricted to the required actions.|
-|Carnot-v1|Heat engine environment with full action space.|
-|Carnot-v2: Heat engine environment with full action space and variable dV actions.|
-|Stirling-v0|Heat engine environment with adiabatic actions unavailable.|
-|Stirling-v1|Heat engine environment with adiabatic actions unavailable and variable dV actions.|
-|Otto-v0|Heat engine environment with isothermal actions unavailable.|
-|Otto-v1|Heat engine environment with isothermal actions unavailable and variable dV actions.|
-|Beeler-v0|Heat engine environment with adiabatic actions replaced with irreversible actions.|
-|Beeler-v1|Heat engine environment with adiabatic actions replaced with irreversible actions and variable dV actions.|
+Carnot-v0 | Heat engine environment with action space restricted to the required actions. 
+Carnot-v1 | Heat engine environment with full action space.
+Carnot-v2 | Heat engine environment with full action space and variable dV actions.
+Stirling-v0 | Heat engine environment with adiabatic actions unavailable.
+Stirling-v1 | Heat engine environment with adiabatic actions unavailable and variable dV actions.
+Otto-v0 | Heat engine environment with isothermal actions unavailable.
+Otto-v1 | Heat engine environment with isothermal actions unavailable and variable dV actions.
+Beeler-v0 | Heat engine environment with adiabatic actions replaced with irreversible actions.
+Beeler-v1 | Heat engine environment with adiabatic actions replaced with irreversible actions and variable dV actions.
 
 
 ## Version history:
