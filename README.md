@@ -20,7 +20,8 @@ pip install -e ./
 ## Environments
 
 
-
+Environment | Description
+--- | ---
 Carnot-v0 | Heat engine environment with action space restricted to the required actions. 
 Carnot-v1 | Heat engine environment with full action space.
 Carnot-v2 | Heat engine environment with full action space and variable dV actions.
