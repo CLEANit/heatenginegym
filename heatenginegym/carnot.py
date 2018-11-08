@@ -1,15 +1,13 @@
 import numpy as np
 import gym
 import gym.spaces
-from cleangym.engine import Engine
-from cleangym.heat_engine import HeatEngineEnv
+from heatenginegym.engine import Engine
+from heatenginegym.heat_engine import HeatEngineEnv
 
 class CarnotEnv(HeatEngineEnv):
     def __init__(self, *args, **kwargs):
         super(CarnotEnv, self).__init__(*args, **kwargs)
-
         self.efficiency = (self.engine.Th - self.engine.Tc) / self.engine.Th
-
         self.actions = {0: self.engine.N_D,
                         1: self.engine.push_D,
                         2: self.engine.pull_D,
@@ -20,11 +18,7 @@ class CarnotEnv(HeatEngineEnv):
                         7: self.engine.push_Th,
                         8: self.engine.pull_Th}
 
-        self.dV_actions = {0: self.engine.dVi,
-                           1: self.engine.dVi / 10.0,
-                           2: self.engine.dVi / 100.0,
-                           3: self.engine.dVi / 1000.0,
-                           4: self.engine.dVi / 10000.0}
+        self.dV_actions = {0: self.engine.dVi}
 
         self.action_map = {
                'N_D':0,
@@ -38,7 +32,7 @@ class CarnotEnv(HeatEngineEnv):
                'pull_Th':8
              }
 
-        self.action_space = gym.spaces.Discrete(len(self.action_map) * len(self.dV_actions))
+        self.action_space = gym.spaces.Discrete(len(self.action_map))
         self.observation_space = gym.spaces.Box(low=np.array([0,0]), high=np.array([1000.,1000.]),dtype=np.float32)
 
     def get_perfect_action_set(self, cycles=1):

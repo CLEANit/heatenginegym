@@ -1,7 +1,7 @@
 import numpy as np
 import gym
 import gym.spaces
-from cleangym.engine import Engine
+from heatenginegym.engine import Engine
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 from pylab import cm
