@@ -1,9 +1,9 @@
 import numpy as np
 import gym
 import gym.spaces
-from cleangym.engine import Engine
+from heatenginegym.engine import Engine
 import matplotlib.pyplot as plt
-from cleangym.heat_engine import HeatEngineEnv
+from heatenginegym.heat_engine import HeatEngineEnv
 
 class StirlingEnv(HeatEngineEnv):
     def __init__(self, *args, **kwargs):

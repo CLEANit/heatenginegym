@@ -1,44 +1,38 @@
-# Carnot world
+# Heat engine gym
 
-## Version history:
+A collection of heat engines, based on the OpenAI Gym environment framework for use with reinforcement learning applications.  If you use this gym, please cite
 
-- r0.1: working environment.
-
-- r0.2: working gym environment.
-
-- r0.3: working gym environment with regular and limited action spaces. Network and grid policy based GA.
-
-- r0.4: working gym environment with regular and limited action spaces and variable dV. Network and grid policy based GA with multiprocessing. Carnot, Stirling, Otto, and Beeler cycle environments available.
-
-
+```bibtex
+@article{beeler2019}{
+bibtex
+}
+```
 
 
 ## To install:
 ```bash
-pip install -e ./
+pip install ./
 ```
-
-
 
 ## Environments
 
-- Carnot-v0: Heat engine environment with action space restricted to the required actions.
 
-- Carnot-v1: Heat engine environment with full action space.
+Environment | Description
+--- | ---
+Carnot-v0 | Heat engine environment with action space restricted to the required actions. 
+Carnot-v1 | Heat engine environment with full action space.
+Carnot-v2 | Heat engine environment with full action space and variable dV actions.
+Stirling-v0 | Heat engine environment with adiabatic actions unavailable.
+Stirling-v1 | Heat engine environment with adiabatic actions unavailable and variable dV actions.
+Otto-v0 | Heat engine environment with isothermal actions unavailable.
+Otto-v1 | Heat engine environment with isothermal actions unavailable and variable dV actions.
+Beeler-v0 | Heat engine environment with adiabatic actions replaced with irreversible actions.
+Beeler-v1 | Heat engine environment with adiabatic actions replaced with irreversible actions and variable dV actions.
 
-- Carnot-v2: Heat engine environment with full action space and variable dV actions.
 
-- Stirling-v0: Heat engine environment with adiabatic actions unavailable.
+## Version history:
 
-- Stirling-v1: Heat engine environment with adiabatic actions unavailable and variable dV actions.
-
-- Otto-v0: Heat engine environment with isothermal actions unavailable.
-
-- Otto-v1: Heat engine environment with isothermal actions unavailable and variable dV actions.
-
-- Beeler-v0: Heat engine environment with adiabatic actions replaced with irreversible actions.
-
-- Beeler-v1: Heat engine environment with adiabatic actions replaced with irreversible actions and variable dV actions.
+- Version 1.0 released 2018-11-11.
 
 
 ## To  run

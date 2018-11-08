@@ -1,8 +1,8 @@
 import numpy as np
 import gym
 import gym.spaces
-from cleangym.engine import Engine
-from cleangym.heat_engine import HeatEngineEnv
+from heatenginegym.engine import Engine
+from heatenginegym.heat_engine import HeatEngineEnv
 
 class OttoEnv(HeatEngineEnv):
     def __init__(self, *args, **kwargs):

@@ -1,23 +1,18 @@
 import numpy as np
 import gym
 import gym.spaces
-from cleangym.engine import Engine
-import matplotlib.pyplot as plt
-from cleangym.heat_engine import HeatEngineEnv
+from heatenginegym.engine import Engine
+from heatenginegym.heat_engine import HeatEngineEnv
 
-class StirlingEnv(HeatEngineEnv):
+class OttoEnv(HeatEngineEnv):
     def __init__(self, *args, **kwargs):
-        super(StirlingEnv, self).__init__(*args, **kwargs)
-
-        self.efficiency = (self.engine.Th - self.engine.Tc) / (self.engine.Th + (self.engine.Cv * (self.engine.Th - self.engine.Tc)) / (self.engine.N * self.engine.R * np.log(self.engine.Vmax / self.engine.Vmin)))
+        super(OttoEnv, self).__init__(*args, **kwargs)
 
         self.actions = {0: self.engine.N_D,
-                        1: self.engine.N_Tc,
-                        2: self.engine.push_Tc,
-                        3: self.engine.pull_Tc,
-                        4: self.engine.N_Th,
-                        5: self.engine.push_Th,
-                        6: self.engine.pull_Th}
+                        1: self.engine.push_D,
+                        2: self.engine.pull_D,
+                        3: self.engine.N_Tc,
+                        4: self.engine.N_Th}
 
         self.dV_actions = {0: self.engine.dVi,
                            1: self.engine.dVi / 10.0,
@@ -27,13 +22,13 @@ class StirlingEnv(HeatEngineEnv):
 
         self.action_map = {
                'N_D':0,
-               'N_Tc':1,
-               'push_Tc':2,
-               'pull_Tc':3,
+               'push_D':1,
+               'pull_D':2,
+               'N_Tc':3,
                'N_Th':4,
-               'push_Th':5,
-               'pull_Th':6
              }
+        self.Q = []
+        self.W = []
 
         self.action_space = gym.spaces.Discrete(len(self.action_map) * len(self.dV_actions))
         self.observation_space = gym.spaces.Box(low=np.array([0,0]), high=np.array([1000.,1000.]),dtype=np.float32)
@@ -48,11 +43,11 @@ class StirlingEnv(HeatEngineEnv):
         actions = []
         for c in range(cycles):
             for i in range(N1):
-                actions.append('push_Tc')
+                actions.append('push_D')
             for i in range(N2):
                 actions.append('N_Th')
             for i in range(N3):
-                actions.append('pull_Th')
+                actions.append('pull_D')
             for i in range(N4):
                 actions.append('N_Tc')
 
