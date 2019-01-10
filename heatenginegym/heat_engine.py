@@ -25,7 +25,7 @@ class HeatEngineEnv(gym.Env):
         T = (self.engine.T - self.engine.Tmin) / (self.engine.Tmax - self.engine.Tmin)
         V = (self.engine.V - self.engine.Vmin) / (self.engine.Vmax - self.engine.Vmin)
         self._plot_data = {"P" : [self.engine.P],
-                           "V" : [self.engine.V],
+                           "V" : [self.engine.V*1000.0],
                            "r" : [np.nan],
                            "dQ": [0.],
                            "dW": [0.],}
