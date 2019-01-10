@@ -20,8 +20,8 @@ class HeatEngineEnv(gym.Env):
     def reset(self):
         self.engine.reset()
         self.done = False
-        self.Q = collections.deque(maxlen=2*len(self.get_perfect_action_set(1)))
-        self.W = collections.deque(maxlen=2*len(self.get_perfect_action_set(1)))
+        self.Q = collections.deque(maxlen=500)
+        self.W = collections.deque(maxlen=500)
         T = (self.engine.T - self.engine.Tmin) / (self.engine.Tmax - self.engine.Tmin)
         V = (self.engine.V - self.engine.Vmin) / (self.engine.Vmax - self.engine.Vmin)
         self._plot_data = {"P" : [self.engine.P],
