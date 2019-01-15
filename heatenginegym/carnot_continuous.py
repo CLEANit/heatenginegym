@@ -41,17 +41,14 @@ class CarnotEnv(HeatEngineEnv):
         VC = self.engine.Vmax
         VB = VC * (self.engine.Tc / self.engine.Th)**(3./2.)
 
-        N1, N2, N3, N4 = [int( abs(VC-VD)/self.engine.dV),int( abs(VD-VA)/self.engine.dV),int( abs(VB-VA)/self.engine.dV),int( abs(VC-VB)/self.engine.dV)]
         actions = []
         for c in range(cycles):
-            for i in range(N1):
-                actions.append('push_Tc')
-            for i in range(N2):
-                actions.append('push_D')
-            for i in range(N3):
-                actions.append('pull_Th')
-            for i in range(N4):
-                actions.append('pull_D')
+            actions.append(['push_Tc', (VC-VD)])
+            actions.append(['push_D', (VD-VA)])
+            actions.append(['N_Th', 0.0])
+            actions.append(['pull_Th', (VB-VA)])
+            actions.append(['pull_D', (VC-VB)])
+            actions.append(['N_Tc', 0.0])
 
         self.engine.Pmax = self.engine.N * self.engine.R * self.engine.Th / VA
         self.engine.Pmin = self.engine.N * self.engine.R * self.engine.Tc / VC
