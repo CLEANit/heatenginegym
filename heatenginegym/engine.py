@@ -62,7 +62,7 @@ class Engine(object):
         self.T0 = self.T
         self.V -= self.dV
         if self.V - self.Vmin < -1e-9:
-            self.V = self.V0
+            self.V = self.Vmin
         self.T = self.T0 * ((self.V0/self.V) ** (2.0/3.0))
         if self.T - self.Tmax > 1e-9:
             self.T = self.T0
@@ -79,7 +79,7 @@ class Engine(object):
         self.T0 = self.T
         self.V += self.dV
         if self.V - self.Vmax > 1e-9:
-            self.V = self.V0
+            self.V = self.Vmax
         self.T = self.T0 * ((self.V0/self.V) ** (2.0/3.0))
         if self.T - self.Tmin < -1e-9:
             self.T = self.T0
@@ -97,8 +97,8 @@ class Engine(object):
         self.P0 = self.P
         self.V -= self.dV
         if self.V - self.Vmin < -1e-9:
-            self.V = self.V0
-        else:
+            self.V = self.Vmin
+        if abs(self.V - self.V0) < 1e-9:
             self.T = self.T0 * (self.V0 ** (2.0/3.0)) * ((1.0 - self.k) ** (abs(self.V - self.V0) / (self.Vmax - self.Vmin))) / ((self.V) ** (2.0/3.0))
         if self.T - self.Tmax > 1e-9 or self.T - self.Tmin < -1e-9:
             self.T = self.T0
@@ -116,8 +116,8 @@ class Engine(object):
         self.P0 = self.P
         self.V += self.dV
         if self.V - self.Vmax > 1e-9:
-            self.V = self.V0
-        else:
+            self.V = self.Vmax
+        if abs(self.V - self.V0) < 1e-9:
             self.T = self.T0 * (self.V0 ** (2.0/3.0)) * ((1.0 - self.k) ** (abs(self.V - self.V0) / (self.Vmax - self.Vmin))) / ((self.V) ** (2.0/3.0))
         if self.T - self.Tmax > 1e-9 or self.T - self.Tmin < -1e-9:
             self.T = self.T0
@@ -142,7 +142,7 @@ class Engine(object):
         self.V0 = self.V
         self.V -= self.dV
         if self.V - self.Vmin < -1e-9:
-            self.V = self.V0
+            self.V = self.Vmin
         self.T = self.Tc
         self.__update_equations_of_state()
 
@@ -155,7 +155,7 @@ class Engine(object):
         self.V0 = self.V
         self.V += self.dV
         if self.V - self.Vmax > 1e-9:
-            self.V = self.V0
+            self.V = self.Vmax
         self.T = self.Tc
 
         self.__update_equations_of_state()
@@ -181,7 +181,7 @@ class Engine(object):
         self.T0 = self.T
         self.V -= self.dV
         if self.V - self.Vmin < -1e-9:
-            self.V = self.V0
+            self.V = self.Vmin
         self.T = self.Th
 
         self.__update_equations_of_state()
@@ -199,7 +199,7 @@ class Engine(object):
         self.T0 = self.T
         self.V += self.dV
         if self.V - self.Vmax > 1e-9:
-            self.V = self.V0
+            self.V = self.Vmax
         self.T = self.Th
         
         self.__update_equations_of_state()
