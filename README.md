@@ -24,7 +24,8 @@ Environment | Description
 --- | ---
 Carnot-v0 | Heat engine environment with action space restricted to the required actions. 
 Carnot-v1 | Heat engine environment with full action space.
-Carnot-v2 | Heat engine environment with full action space and variable dV actions.
+Carnot-v2 | Heat engine environment with full action space and discrete variable dV actions.
+Carnot-v3 | Heat engine environment with full action space and continuous variable dV actions.
 Stirling-v0 | Heat engine environment with adiabatic actions unavailable.
 Stirling-v1 | Heat engine environment with adiabatic actions unavailable and variable dV actions.
 Otto-v0 | Heat engine environment with isothermal actions unavailable.
