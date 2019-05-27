@@ -19,6 +19,12 @@ register(
 )
 
 register(
+    id='Carnot-v3',
+    entry_point='heatenginegym.carnot_continuous:CarnotEnv',
+    max_episode_steps=500,
+)
+
+register(
     id='Beeler-v0',
     entry_point='heatenginegym.beeler:BeelerEnv',
     max_episode_steps=500,

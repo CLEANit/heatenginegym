@@ -25,7 +25,7 @@ class HeatEngineEnv(gym.Env):
         T = (self.engine.T - self.engine.Tmin) / (self.engine.Tmax - self.engine.Tmin)
         V = (self.engine.V - self.engine.Vmin) / (self.engine.Vmax - self.engine.Vmin)
         self._plot_data = {"P" : [self.engine.P],
-                           "V" : [self.engine.V*1000.0],
+                           "V" : [self.engine.V*1000.],
                            "r" : [np.nan],
                            "dQ": [0.],
                            "dW": [0.],}
@@ -90,9 +90,9 @@ class HeatEngineEnv(gym.Env):
             plt.pause(0.000001)
 
     def step(self, action):
-        action1 = action % len(self.action_map)
-        action2 = int(action / len(self.action_map))
-        self.engine.dV = self.dV_actions[action2]
+        action1 = int(action[0])
+        action2 = action[1]
+        self.engine.dV = action2
         self.engine.T, self.engine.V, self.dW, self.dQ = self.actions[action1]()
         self.Q.append(self.dQ)
         self.W.append(self.dW)
