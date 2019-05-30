@@ -20,8 +20,8 @@ class HeatEngineEnv(gym.Env):
     def reset(self):
         self.engine.reset()
         self.done = False
-        self.Q = collections.deque(maxlen=500)
-        self.W = collections.deque(maxlen=500)
+        self.Q = [] #collections.deque(maxlen=500)
+        self.W = [] #collections.deque(maxlen=500)
         T = (self.engine.T - self.engine.Tmin) / (self.engine.Tmax - self.engine.Tmin)
         V = (self.engine.V - self.engine.Vmin) / (self.engine.Vmax - self.engine.Vmin)
         self._plot_data = {"P" : [self.engine.P],
@@ -30,7 +30,7 @@ class HeatEngineEnv(gym.Env):
                            "dQ": [0.],
                            "dW": [0.],}
         self._first_render=True
-        return np.array([T, V])
+        return np.array([T, V, 0.0, 0.0])
 
 
     def render(self, mode='plot'):
@@ -107,5 +107,6 @@ class HeatEngineEnv(gym.Env):
         self._plot_data['r'].append(r)
         self._plot_data['dQ'].append(self.dQ)
         self._plot_data['dW'].append(self.dW)
-        return np.array([T, V]), r, self.done, np.array([self.engine.T, self.engine.V, self.engine.P])
+        state = np.array([T, V, float(np.array(self.W).sum()), float(np.array(self.Q).sum()/10.)])
+        return state, r, self.done, np.array([self.engine.T, self.engine.V, self.engine.P])
 
