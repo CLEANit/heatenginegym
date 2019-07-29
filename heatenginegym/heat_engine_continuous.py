@@ -22,15 +22,13 @@ class HeatEngineEnv(gym.Env):
         self.done = False
         self.Q = collections.deque(maxlen=500)
         self.W = collections.deque(maxlen=500)
-        T = (self.engine.T - self.engine.Tmin) / (self.engine.Tmax - self.engine.Tmin)
-        V = (self.engine.V - self.engine.Vmin) / (self.engine.Vmax - self.engine.Vmin)
         self._plot_data = {"P" : [self.engine.P],
                            "V" : [self.engine.V*1000.],
                            "r" : [np.nan],
                            "dQ": [0.],
                            "dW": [0.],}
         self._first_render=True
-        return np.array([T, V])
+        return np.array([self.engine.T, self.engine.V])
 
 
     def render(self, mode='plot'):
@@ -100,12 +98,10 @@ class HeatEngineEnv(gym.Env):
             r = float(np.array(self.W).sum()) / float(np.array(self.Q).sum())
         except ZeroDivisionError:
             r = -0.001
-        T = (self.engine.T - self.engine.Tmin) / (self.engine.Tmax - self.engine.Tmin)
-        V = (self.engine.V - self.engine.Vmin) / (self.engine.Vmax - self.engine.Vmin)
         self._plot_data['P'].append(self.engine.P)
         self._plot_data['V'].append(self.engine.V*1000.)
         self._plot_data['r'].append(r)
         self._plot_data['dQ'].append(self.dQ)
         self._plot_data['dW'].append(self.dW)
-        return np.array([T, V]), r, self.done, np.array([self.engine.T, self.engine.V, self.engine.P])
+        return np.array([self.engine.T, self.engine.V]), r, self.done, np.array([self.engine.P])
 
