@@ -27,7 +27,7 @@ class CarnotEnv(gym.Env):
         self.W = []
 
         self.action_space = gym.spaces.Discrete(4)
-        self.observation_space = gym.spaces.Box(low=np.array([self.engine.Vmin, self.engine.Tmin]), high=np.array([self.engine.Vmax, self.engine.Tmax]),dtype=np.float32)
+        self.observation_space = gym.spaces.Box(low=np.array([self.engine.Tmin, self.engine.Vmin]), high=np.array([self.engine.Tmax, self.engine.Vmax]),dtype=np.float32)
 
 
     def reset(self):
