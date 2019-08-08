@@ -11,8 +11,8 @@ class HeatEngineEnv(gym.Env):
     def __init__(self, *args, **kwargs):
         self.engine = Engine(*args, **kwargs)
         self.done = False
-        self.Q = 0.7824495820293804
-        self.W = 0.2
+        self.Qi = 0.7824495820293804
+        self.Wi = 0.2
         self.t = 0
         self._first_render = True
         self._plot_data_persistent = {"r":[]}
@@ -21,8 +21,8 @@ class HeatEngineEnv(gym.Env):
     def reset(self):
         self.engine.reset()
         self.done = False
-        self.Q = Qi
-        self.W = Wi
+        self.Q = self.Qi
+        self.W = self.Wi
         self.t = 0
         self._plot_data = {"P" : [self.engine.P],
                            "V" : [self.engine.V*1000.0],
