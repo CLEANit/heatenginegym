@@ -3,7 +3,7 @@ import gym
 from scipy.integrate import quad
 
 class Engine(object):
-    def __init__(self, Ti=300.0, Vi=0.001, Tc=300.0, Th=500.0, dV=0.0001, k=0.0):
+    def __init__(self, Ti=300.0, Vi=0.001, Tc=300.0, Th=500.0, dV=0.0002, k=0.0):
         self.N = 1.0/22.4 # 1 mole occupies 22.4 L at STP
         self.c = 5.0/3.0  # Type of gas 
         self.kB = 1.38064852e-23  #Boltzmann constant

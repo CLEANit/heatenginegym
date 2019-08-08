@@ -52,8 +52,8 @@ class Engine(object):
         self.P = self.N * self.T * self.R / self.V
 
     def reverse(self):
-        self.T = T0
-        self.V = V0
+        self.T = self.T0
+        self.V = self.V0
 
     def N_D(self):
         dW = 0.0
