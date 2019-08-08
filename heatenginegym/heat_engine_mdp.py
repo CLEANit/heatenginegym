@@ -102,6 +102,8 @@ class HeatEngineEnv(gym.Env):
         self.t += 1
         if self.t == 200:
             r += self.W - self.Wi
+        else:
+            r = 0.0
         self._plot_data['P'].append(self.engine.P)
         self._plot_data['V'].append(self.engine.V*1000.)
         self._plot_data['r'].append(r)
