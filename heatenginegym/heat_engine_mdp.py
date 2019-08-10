@@ -106,11 +106,15 @@ class HeatEngineEnv(gym.Env):
             r = self.W - self.Wi
         else:
             r = 0.0
+        try:
+            eta = (self.W - self.Wi) / (self.Qi - self.Q)
+        except ZeroDivisionError:
+            eta = 0.0
         self._plot_data['P'].append(self.engine.P)
         self._plot_data['V'].append(self.engine.V*1000.)
-        self._plot_data['r'].append(r)
+        self._plot_data['r'].append(eta)
         self._plot_data['dQ'].append(self.dQ)
         self._plot_data['dW'].append(self.dW)
 
-        return np.array([self.engine.T, self.engine.V, self.Q, self.W]), r, self.done, np.array([self.engine.P])
+        return np.array([self.engine.T, self.engine.V, self.Q, self.W]), r, self.done, {}
 
