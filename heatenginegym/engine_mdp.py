@@ -59,7 +59,7 @@ class Engine(object):
         dW = 0.0
         dQ = 0.0
         
-        return self.T, self.V, dW, dQ
+        return self.T, self.V, dW, dQ, True
 
     def push_D(self):
         self.V0 = self.V
@@ -76,7 +76,7 @@ class Engine(object):
         dW = -(3.0/2.0) * self.N * self.R * (self.T - self.T0)
         dQ = 0.0
         
-        return self.T, self.V, dW, dQ
+        return self.T, self.V, dW, dQ, False
 
     def pull_D(self):
         self.V0 = self.V
@@ -93,7 +93,7 @@ class Engine(object):
         dW = -(3.0/2.0) * self.N * self.R * (self.T - self.T0)
         dQ = 0.0
         
-        return self.T, self.V, dW, dQ
+        return self.T, self.V, dW, dQ, False
 
     def push_L(self):
         self.V0 = self.V
@@ -112,7 +112,7 @@ class Engine(object):
         dW = quad(self._P_L, self.V0, self.V)[0]
         dQ = 0.0
 
-        return self.T, self.V, dW, dQ
+        return self.T, self.V, dW, dQ, False
 
     def pull_L(self):
         self.V0 = self.V
@@ -131,7 +131,7 @@ class Engine(object):
         dW = quad(self._P_L, self.V0, self.V)[0]
         dQ = 0.0
 
-        return self.T, self.V, dW, dQ
+        return self.T, self.V, dW, dQ, False
 
     def N_Tc(self):
         self.T = self.Tc
@@ -140,7 +140,7 @@ class Engine(object):
         dW = 0.0
         dQ = 0.0
         
-        return self.T, self.V, dW, dQ
+        return self.T, self.V, dW, dQ, False
 
     def push_Tc(self):
         self.V0 = self.V
@@ -153,7 +153,7 @@ class Engine(object):
         dW = self.N * self.R * self.T * np.log(self.V / self.V0)
         dQ = 0.0
 
-        return self.T, self.V, dW, dQ
+        return self.T, self.V, dW, dQ, False
 
     def pull_Tc(self):
         self.V0 = self.V
@@ -165,7 +165,7 @@ class Engine(object):
         self.__update_equations_of_state()
         dW = self.N * self.R * self.T * np.log(self.V / self.V0)
         dQ = 0.0
-        return self.T, self.V, dW, dQ
+        return self.T, self.V, dW, dQ, False
 
     def N_Th(self):
         self.T0 = self.T
@@ -178,7 +178,7 @@ class Engine(object):
         else:
             dQ = 0.0
         
-        return self.T, self.V, dW, dQ
+        return self.T, self.V, dW, dQ, False
 
     def push_Th(self):
         self.V0 = self.V
@@ -196,7 +196,7 @@ class Engine(object):
         else:
             dQ = 0
             
-        return self.T, self.V, dW, dQ
+        return self.T, self.V, dW, dQ, False
 
     def pull_Th(self):
         self.V0 = self.V
@@ -214,6 +214,6 @@ class Engine(object):
         else:
             dQ = dW
 
-        return self.T, self.V, dW, dQ
+        return self.T, self.V, dW, dQ, False
 
 

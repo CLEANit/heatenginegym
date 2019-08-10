@@ -93,7 +93,7 @@ class HeatEngineEnv(gym.Env):
         action1 = action % len(self.action_map)
         action2 = int(action / len(self.action_map))
         self.engine.dV = self.dV_actions[action2]
-        self.engine.T, self.engine.V, self.dW, self.dQ = self.actions[action1]()
+        self.engine.T, self.engine.V, self.dW, self.dQ, self.done = self.actions[action1]()
         if (self.Q - self.dQ) > -1e-9 and (self.W + self.dW) > -1e-9:
             self.Q -= self.dQ
             self.W += self.dW
@@ -101,7 +101,9 @@ class HeatEngineEnv(gym.Env):
             self.engine.reverse()
         self.t += 1
         if self.t == 200:
-            r += self.W - self.Wi
+            self.done = True
+        if self.done:
+            r = self.W - self.Wi
         else:
             r = 0.0
         self._plot_data['P'].append(self.engine.P)
@@ -109,5 +111,6 @@ class HeatEngineEnv(gym.Env):
         self._plot_data['r'].append(r)
         self._plot_data['dQ'].append(self.dQ)
         self._plot_data['dW'].append(self.dW)
+
         return np.array([self.engine.T, self.engine.V, self.Q, self.W]), r, self.done, np.array([self.engine.P])
 
