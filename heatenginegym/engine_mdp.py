@@ -54,6 +54,7 @@ class Engine(object):
     def reverse(self):
         self.T = self.T0
         self.V = self.V0
+        self.__update_equations_of_state()
 
     def N_D(self):
         dW = 0.0
