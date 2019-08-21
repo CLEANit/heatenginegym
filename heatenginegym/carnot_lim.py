@@ -27,17 +27,14 @@ class CarnotEnv(gym.Env):
         self.W = []
 
         self.action_space = gym.spaces.Discrete(4)
-        self.observation_space = gym.spaces.Box(low=np.array([0,0]), high=np.array([1000.,1000.]),dtype=np.float32)
+        self.observation_space = gym.spaces.Box(low=np.array([self.engine.Tmin, self.engine.Vmin]), high=np.array([self.engine.Tmax, self.engine.Vmax]),dtype=np.float32)
 
 
     def reset(self):
         self.engine.reset()
         self.Q = []
         self.W = []
-        T = (self.engine.T - self.engine.Tmin) / (self.engine.Tmax - self.engine.Tmin)
-        V = (self.engine.V - self.engine.Vmin) / (self.engine.Vmax - self.engine.Vmin)
-        return np.array([T, V])
-        #return np.array([self.engine.T, self.engine.V])
+        return np.array([self.engine.T, self.engine.V])
 
     def step(self, action):
         self.engine.T, self.engine.V, self.dW, self.dQ = self.actions[action]()
@@ -49,8 +46,7 @@ class CarnotEnv(gym.Env):
             r = -1.1
         T = (self.engine.T - self.engine.Tmin) / (self.engine.Tmax - self.engine.Tmin)
         V = (self.engine.V - self.engine.Vmin) / (self.engine.Vmax - self.engine.Vmin)
-        return np.array([T, V]), r, self.done, np.array([self.engine.T, self.engine.V, self.engine.P])
-        #return np.array([self.engine.T, self.engine.V]), r, self.done, self.engine.P
+        return np.array([self.engine.T, self.engine.V]), r, self.done, self.engine.P
 
 
 

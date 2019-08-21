@@ -33,7 +33,7 @@ class CarnotEnv(HeatEngineEnv):
              }
 
         self.action_space = gym.spaces.Box(np.array([0, 0]), np.array([len(self.actions) - 1, self.engine.Vmax - self.engine.Vmin]))
-        self.observation_space = gym.spaces.Box(low=np.array([0,0]), high=np.array([1000.,1000.]),dtype=np.float32)
+        self.observation_space = gym.spaces.Box(low=np.array([self.engine.Tmin, self.engine.Vmin]), high=np.array([self.engine.Tmax, self.engine.Vmax]),dtype=np.float32)
 
     def get_perfect_action_set(self, cycles=1):
         VA = self.engine.Vmin

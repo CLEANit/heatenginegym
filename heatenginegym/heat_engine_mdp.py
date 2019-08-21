@@ -1,7 +1,7 @@
 import numpy as np
 import gym
 import gym.spaces
-from heatenginegym.engine import Engine
+from heatenginegym.engine_mdp import Engine
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 from pylab import cm
@@ -11,8 +11,9 @@ class HeatEngineEnv(gym.Env):
     def __init__(self, *args, **kwargs):
         self.engine = Engine(*args, **kwargs)
         self.done = False
-        self.Q = []
-        self.W = []
+        self.Qi = 0.7824495820293804
+        self.Wi = 0.2
+        self.t = 0
         self._first_render = True
         self._plot_data_persistent = {"r":[]}
         self._max_episode_steps = 100000
@@ -20,15 +21,16 @@ class HeatEngineEnv(gym.Env):
     def reset(self):
         self.engine.reset()
         self.done = False
-        self.Q = collections.deque(maxlen=500)
-        self.W = collections.deque(maxlen=500)
+        self.Q = self.Qi
+        self.W = self.Wi
+        self.t = 0
         self._plot_data = {"P" : [self.engine.P],
-                           "V" : [self.engine.V*1000.],
+                           "V" : [self.engine.V*1000.0],
                            "r" : [np.nan],
                            "dQ": [0.],
                            "dW": [0.],}
         self._first_render=True
-        return np.array([self.engine.T, self.engine.V])
+        return np.array([self.engine.T, self.engine.V, self.Q, self.W])
 
 
     def render(self, mode='plot'):
@@ -88,20 +90,31 @@ class HeatEngineEnv(gym.Env):
             plt.pause(0.000001)
 
     def step(self, action):
-        action1 = int(action[0])
-        action2 = action[1]
-        self.engine.dV = action2
-        self.engine.T, self.engine.V, self.dW, self.dQ = self.actions[action1]()
-        self.Q.append(self.dQ)
-        self.W.append(self.dW)
+        action1 = action % len(self.action_map)
+        action2 = int(action / len(self.action_map))
+        self.engine.dV = self.dV_actions[action2]
+        self.engine.T, self.engine.V, self.dW, self.dQ, self.done = self.actions[action1]()
+        if (self.Q - self.dQ) > -1e-9 and (self.W + self.dW) > -1e-9:
+            self.Q -= self.dQ
+            self.W += self.dW
+        else:
+            self.engine.reverse()
+        self.t += 1
+        if self.t == 200:
+            self.done = True
+        if self.done:
+            r = self.W - self.Wi
+        else:
+            r = 0.0
         try:
-            r = float(np.array(self.W).sum()) / float(np.array(self.Q).sum())
+            eta = (self.W - self.Wi) / (self.Qi - self.Q)
         except ZeroDivisionError:
-            r = -0.001
+            eta = 0.0
         self._plot_data['P'].append(self.engine.P)
         self._plot_data['V'].append(self.engine.V*1000.)
-        self._plot_data['r'].append(r)
+        self._plot_data['r'].append(eta)
         self._plot_data['dQ'].append(self.dQ)
         self._plot_data['dW'].append(self.dW)
-        return np.array([self.engine.T, self.engine.V]), r, self.done, np.array([self.engine.P])
+
+        return np.array([self.engine.T, self.engine.V, self.Q, self.W]), r, self.done, {}
 
