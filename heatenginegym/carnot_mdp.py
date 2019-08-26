@@ -5,8 +5,8 @@ from heatenginegym.engine_mdp import Engine
 from heatenginegym.heat_engine_mdp import HeatEngineEnv
 
 class CarnotEnv(HeatEngineEnv):
-    def __init__(self, *args, **kwargs):
-        super(CarnotEnv, self).__init__(*args, **kwargs)
+    def __init__(self, max_episode_steps=200, *args, **kwargs):
+        super(CarnotEnv, self).__init__(max_episode_steps=max_episode_steps, *args, **kwargs)
         self.efficiency = (self.engine.Th - self.engine.Tc) / self.engine.Th
         self.actions = {0: self.engine.N_D,
                         1: self.engine.push_D,

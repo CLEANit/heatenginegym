@@ -8,15 +8,15 @@ from pylab import cm
 import collections
 
 class HeatEngineEnv(gym.Env):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, max_episode_steps=200, *args, **kwargs):
         self.engine = Engine(*args, **kwargs)
         self.done = False
         self.Qi = 0.7824495820293804
-        self.Wi = 0.2
+        self.Wi = 0.3
         self.t = 0
         self._first_render = True
         self._plot_data_persistent = {"r":[]}
-        self._max_episode_steps = 100000
+        self._max_episode_steps = max_episode_steps
 
     def reset(self):
         self.engine.reset()
@@ -100,14 +100,14 @@ class HeatEngineEnv(gym.Env):
         else:
             self.engine.reverse()
         self.t += 1
-        if self.t == 200:
+        if self.t == self._max_episode_steps:
             self.done = True
         if self.done:
             r = self.W - self.Wi
         else:
             r = 0.0
         try:
-            eta = (self.W - self.Wi) / (self.Qi - self.Q)
+            eta = float(self.W - self.Wi) / float(self.Qi - self.Q)
         except ZeroDivisionError:
             eta = 0.0
         self._plot_data['P'].append(self.engine.P)
