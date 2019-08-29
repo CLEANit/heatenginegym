@@ -57,6 +57,8 @@ class Engine(object):
         self.__update_equations_of_state()
 
     def N_D(self):
+        self.V0 = self.V
+        self.T0 = self.T
         dW = 0.0
         dQ = 0.0
         
@@ -135,6 +137,8 @@ class Engine(object):
         return self.T, self.V, dW, dQ, False
 
     def N_Tc(self):
+        self.V0 = self.V
+        self.T0 = self.T
         self.T = self.Tc
         self.__update_equations_of_state()
 
@@ -145,6 +149,7 @@ class Engine(object):
 
     def push_Tc(self):
         self.V0 = self.V
+        self.T0 = self.T
         self.V -= self.dV
         if self.V - self.Vmin < -1e-9:
             self.V = self.Vmin
@@ -158,6 +163,7 @@ class Engine(object):
 
     def pull_Tc(self):
         self.V0 = self.V
+        self.T0 = self.T
         self.V += self.dV
         if self.V - self.Vmax > 1e-9:
             self.V = self.Vmax
@@ -169,6 +175,7 @@ class Engine(object):
         return self.T, self.V, dW, dQ, False
 
     def N_Th(self):
+        self.V0 = self.V
         self.T0 = self.T
         self.T = self.Th
         self.__update_equations_of_state()
