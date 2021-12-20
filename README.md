@@ -3,11 +3,19 @@
 A collection of heat engines, based on the OpenAI Gym environment framework for use with reinforcement learning applications.  If you use this gym, please cite
 
 ```bibtex
-@article{beeler2019optimizing,
-  title={Optimizing thermodynamic trajectories using evolutionary reinforcement learning},
-  author={Beeler, Chris and Yahorau, Uladzimir and Coles, Rory and Mills, Kyle and Whitelam, Stephen and Tamblyn, Isaac},
-  journal={arXiv preprint arXiv:1903.08543},
-  year={2019}
+@article{beeler2021optimizing,
+  title = {Optimizing thermodynamic trajectories using evolutionary and gradient-based reinforcement learning},
+  author = {Beeler, Chris and Yahorau, Uladzimir and Coles, Rory and Mills, Kyle and Whitelam, Stephen and Tamblyn, Isaac},
+  journal = {Phys. Rev. E},
+  volume = {104},
+  issue = {6},
+  pages = {064128},
+  numpages = {10},
+  year = {2021},
+  month = {Dec},
+  publisher = {American Physical Society},
+  doi = {10.1103/PhysRevE.104.064128},
+  url = {https://link.aps.org/doi/10.1103/PhysRevE.104.064128}
 }
 ```
 
